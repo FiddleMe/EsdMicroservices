@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+    <!-- Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-auth.js"></script>
+    <!-- app's Firebase configuration -->
+    <script src="firebase.js"></script>
+    <!-- app's custom JavaScript code -->
+    <script type='module' src="userdetails.js"></script>
+    <script type='module' src="logout.js"></script>
+    <script src="home.js"></script>
+    
+
+    <title>Home</title>
+  </head>
+
+  <body>
+    <div class="container">
+        <div class="profile">
+            <h3>Profile Page</h3>
+          <img id="profile_image" src="profilepic.png" style="width: 100px; height: 100px">
+          <div id="profile_details">
+            <p>DETAILS</p>
+            <p>Email: <span id="email"></span></p>
+            <button id="logout">Logout</button>
+          </div>
+        </div>
+      </div>
+  </body>
+</html>
