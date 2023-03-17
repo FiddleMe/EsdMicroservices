@@ -2,6 +2,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "OrderMicroserviceApplication",
+      "request": "launch",
+      "mainClass": "com.ESDMicroservices.ordermicroservice.OrderMicroserviceApplication",
+      "projectName": "order-microservice"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-ProductServiceApplication<product-service>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
