@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,14 +41,13 @@ public class OrderController {
 
     @GetMapping("/findOrderById")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Order> getOrderById(@RequestParam("OrderId") Long orderId) {
-        return orderService.getOrderById(orderId);
+    public ResponseEntity<Order> getOrderById(@RequestParam("OrderId") Long orderId) {
+        Optional<Order> optionalOrder = orderService.getOrderById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            return ResponseEntity.ok().body(order); // Return 200 with Order object
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Return 400 with no body
+        }
     }
-
-    // @GetMapping
-    // @ResponseStatus(HttpStatus.OK)
-    // public ResponseEntity<List<OrderDTO>> getOrders() {
-    // List<OrderDTO> orders = orderService.getOrders();
-    // return new ResponseEntity<>(orders, HttpStatus.OK);
-    // }
 }
