@@ -1,8 +1,10 @@
 package com.ESDMicroservices.ordermicroservice.service;
 
+import java.lang.StackWalker.Option;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.sql.Update;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Service;
@@ -58,5 +60,9 @@ public class OrderService {
 
     public Optional<Order> getOrderById(Long orderId) {
         return orderRepository.findOrderById(orderId);
+    }
+
+    public void saveOrder(Order order) {
+        orderRepository.save(order);
     }
 }
