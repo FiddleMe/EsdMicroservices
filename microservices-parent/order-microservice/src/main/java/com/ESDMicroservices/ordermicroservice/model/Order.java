@@ -37,6 +37,7 @@ public class Order {
     private List<OrderLineItems> orderLineItemsList; // {burger: 1, coke: 1,} //{name,qty}
     private String ModeOfEating; // Onsite
     private String InvoiceId; // abc //foreign key to invoice table
+    private String Status;
 
 }
 

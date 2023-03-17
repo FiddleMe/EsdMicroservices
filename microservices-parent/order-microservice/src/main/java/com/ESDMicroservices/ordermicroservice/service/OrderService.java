@@ -40,6 +40,7 @@ public class OrderService {
                 .toList();
         order.setOrderLineItemsList(orderLineItems);
         order.setInvoiceId("None");
+        order.setStatus("Preorder");
         orderRepository.save(order);
     }
 
