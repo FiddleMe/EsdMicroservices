@@ -1,5 +1,5 @@
 // login.js
-firebase.initializeApp(firebaseConfig);
+//firebase.initializeApp(firebaseConfig);
 const loginForm = document.getElementById('login');
 
 loginForm.addEventListener('submit', (e) => {
