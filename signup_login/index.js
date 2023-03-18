@@ -1,3 +1,4 @@
+// entry point for node.js, used to set up servers and routes
 const express = require('express');
 const admin = require('firebase-admin');
 
