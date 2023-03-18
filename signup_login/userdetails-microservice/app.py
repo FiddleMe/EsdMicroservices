@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-import firebase_admin
+import firebase_admin 
 from firebase_admin import credentials, auth
 
 # Initialize the Flask app
