@@ -1,8 +1,8 @@
 // login.js
-
+firebase.initializeApp(firebaseConfig);
 const loginForm = document.getElementById('login');
 
-loginForm.addEventListener('click', (e) => {
+loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
   // Get user info

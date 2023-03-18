@@ -1,14 +1,14 @@
-from firebase-admin import credentials, auth
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-import firebase_admin 
+import firebase_admin
+from firebase_admin import credentials, auth
 
 
 # Initialize the Flask app
 app = Flask(__name__)
 
 # Configure the database connection string. **TO DO: should be updated with the actual MySQL database credentials for your user details microservice.**
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:password@localhost:3306/user_details'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:password@localhost:3306/userdetails'
 
 # Configure Firebase credentials and initialize Firebase app
 # TO DO: path here may need to change
