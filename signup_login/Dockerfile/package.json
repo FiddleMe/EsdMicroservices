@@ -1,0 +1,14 @@
+{
+    "name": "firebase-microservice",
+    "version": "1.0.0",
+    "description": "A microservice for fetching user details from Firebase Authentication API",
+    "main": "index.js",
+    "dependencies": {
+      "express": "4.17.1",
+      "firebase-admin": "9.6.0"
+    },
+    "scripts": {
+      "start": "node index.js"
+    }
+  }
+  
