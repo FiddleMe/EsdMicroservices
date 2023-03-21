@@ -12,41 +12,59 @@
 	</head>
 	<body>
 	<div class="container-fluid">
-		<div class="banner">
+		<div class="row">
+			<div class="banner justify-content-center mx-auto p-0 mt-5">
 		<div class="hero">
 			<h1> Logo / Name</h1>
 		</div>
-		<div class="sub-content">
-			<p>Lorem ipsum dolor sit amet,<br> consectetur adipiscing elit,<br> sed  do eiusmod tempor<br> incididunt ut labore et.</p>
+		<div class="sub-content ms-5">
+			<p>Experience the flavors of Korea in every bite!</p>
 		<div  class="color-border"></div>
 		</div>		
 		</div>
-		<div class="listcontainer">
+		</div>
+		<!-- <div class="listcontainer"> -->
 			<div id="app">
-				<div class="card-group">
-					<div v-for="m in menu" class='card mx-auto' style='width: 18rem;'>
-						<img v-bind:src="pics[m.name]" class='card-img-top' alt='...'>
-						<div class='card-body'>
-							<h5 class='card-title'>{{m.name}}</h5>
-							<p class='card-text'>{{m.description}}</p>
-						</div>
-						<div class='card-body'>
-							<a href='#' class='card-link'>Card link</a>
-							<a href='#' class='card-link'>Another link</a>
-					</div>
-					</div> <!-- card -->
-				</div>
-				<div class="food-card" v-for="m in menu">
-					<div class="item-image">
+				<!-- <div class="wrapper">
+					<div class="card" v-for="m in menu">
 						<img v-bind:src="pics[m.name]"/>
+						<div class="descriptions">
+							<h1>{{m.name}} </h1>
+							<p>
+								{{m.description}}
+							</p>
+							<button class="btn btn-primary"> hello </button>
+						</div>
 					</div>
+				</div> -->
+				
+				
+					<!-- <div class="container-fluid"> -->
+						<div class="row justify-content-center">
+							<div class="col col-4 justify-content-center p-0" v-for="m in menu">
+								<div class="food-card justify-content-center mx-auto">
+								<div class="card mx-auto">
+						<img v-bind:src="pics[m.name]" class="mx-auto pt-3"/>
 					<div class="item-name">
-						{{m.name}}
+						{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block"> ${{m.price.toFixed(2)}} </span>
 					</div>
+					<div class="descriptions">
+						<p>
+							{{m.description}}
+						</p>
+						<button class="btn btn-primary"> Add to Order </button>
+					</div>
+					</div>
+							</div>
+						</div>
+					</div>
+					
 				</div>
 			</div>
-		</div>
-	</div>
+				
+			</div>
+		<!-- </div> -->
+	<!-- </div> -->
   <!-- Vue 3 -->
   <script src='https://cdn.jsdelivr.net/npm/vue@next'></script>
   <!-- Axios -->

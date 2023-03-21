@@ -1,5 +1,4 @@
 // <div id='app'></div>
-console.log('read js')
 const app = Vue.createApp({ 
     data() { 
         return { 
@@ -17,11 +16,10 @@ const app = Vue.createApp({
     //     }  
     // }, // computed
     created() { 
-        console.log('in created')
         axios.get('http://127.0.0.1:8080/api/product')
             .then(response => {
-                console.log('in success')
                 this.menu= response.data;
+                console.log(this.menu)
             })
             .catch( error => {
                 console.log(error.message);
