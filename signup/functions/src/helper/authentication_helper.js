@@ -1,6 +1,6 @@
 // helper class created for authentication and sending verifications emails when a new member is registered
 
-const FirebaseService = require('./firebase_helper');
+const FirebaseService = require('./firebase_helper.js');
 
 class AuthService extends FirebaseService {
   /**

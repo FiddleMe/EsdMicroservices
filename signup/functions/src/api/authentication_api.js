@@ -7,7 +7,7 @@ const {
   handleSignUp,
   handleAsyncLogin,
   handleAsyncLogout,
-} = require('../controllers/authentication_handler.js');
+} = require('../controller/authentication_handler.js');
 
 // Create an Express application
 const app = express();

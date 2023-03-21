@@ -1,7 +1,7 @@
 // Import required modules and dependencies
 const { Request, Response } = require("express");
-const serviceRequest = require("request-promise");
-const AuthService = require("../helpers/authentication_helper.js");
+//const serviceRequest = require("request-promise");
+const AuthService = require("../helper/authentication_helper.js");
 const { httpURL: http } = require("../keys");
 
 // Initialize the AuthService

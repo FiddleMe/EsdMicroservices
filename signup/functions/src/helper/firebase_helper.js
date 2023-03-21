@@ -1,6 +1,9 @@
 // declare a helper function for firebase
+const firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/firestore');
 
-const firebase = require('../helper/firebase_helper');
+//const firebase = require('../helper/firebase_helper');
 
 const config = {
     apiKey: "AIzaSyDrZru6I9Sq0HfLlERZcB-FefHUdXffC1U",
