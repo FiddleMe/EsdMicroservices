@@ -12,9 +12,9 @@ exports.handleAsyncLogin = async function (request, response) {
   try {
     const { email, password } = request.body;
     const login = await auth.login(email, password);
-    const books = await innerLogin(`${http}/book/login`, { email, password });
+    //const books = await innerLogin(`${http}/book/login`, { email, password });
     const user = await innerLogin(`${http}/user/login`, { email, password });
-    response.send({ login, books, user });
+    response.send({ login, user });
   } catch (error) {
     console.error(error);
     response.status(500).send(error);
@@ -37,9 +37,9 @@ exports.handleLogin = async function (request, response) {
 exports.handleAsyncLogout = async function (request, response) {
   try {
     const nodes = await auth.logout();
-    const books = await innerLogout(`${http}/book/logout`);
+    //const books = await innerLogout(`${http}/book/logout`);
     const user = await innerLogout(`${http}/user/logout`);
-    response.send({ nodes, books, user });
+    response.send({ nodes, user });
   } catch (error) {
     console.error(error);
     response.status(500).send({ error });
@@ -108,7 +108,7 @@ async function handleUserUpdate(request, response) {
   }
   
   // Inner logout function
-  async function innerLogout(uri){
+  /*async function innerLogout(uri){
     try {
       const books = await serviceRequest({
         uri,
@@ -118,4 +118,4 @@ async function handleUserUpdate(request, response) {
     } catch (error) {
       return Promise.reject(error)
     }
-  }
+  }*/
