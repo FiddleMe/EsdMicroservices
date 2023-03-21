@@ -1,60 +1,62 @@
-// imports Firebase Functions and Admin SDK modules
+// Import Firebase Functions, Admin SDK, and API modules
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const { app: auths } = require('../api/authentication_api.js');
+const { service: users } = require('../api/userdetails_api.js');
+//const { service: books } = require('../api/books_api.js');
 
-//initialize FIrebase Admin SDK
+// Firebase Cloud Functions based on Express apps
+const auth = functions.https.onRequest(auths);
+const user = functions.https.onRequest(users);
+//const book = functions.https.onRequest(books);
+
+// Firestore triggers not used to delete
+//const onCreateUser = functions.auth.user().onCreate(onCreate);
+//const onCreateBook = functions.firestore.document('books/{booksId}').onCreate(onBookArrival);
+
+// Initialize Firebase Admin SDK
 admin.initializeApp();
 
-//create esd-userDetails collection in variable db
+// Create esd-userDetails collection in variable db
 const db = admin.firestore().collection('esd-userDetails');
 
-// create HTTP [POST] request to add user details to db
-exports.addUserDetails = functions.https.onRequest(async (
-  /*http request object*/ request,
-  /* http response object*/ response
-) => {
+// Create HTTP [POST] request to add user details to db
+exports.addUserDetails = functions.https.onRequest(async (request, response) => {
   try {
-    //store request body object values
     const { email, password } = request.body;
-    //add new user details to db
     const addNewUser = await db.add({ email, password });
-    //get newly added user from db
     const newUserDetails = await addNewUser.get();
-    //terminate request with new user added to db
     response.send(newUserDetails.data());
   } catch (error) {
-    //log error
     console.error(error);
-    //terminate request if an error occurs
     response.status(500).send(error);
   }
 });
 
-// create HTTP [GET] request to fetch user details from db
-exports.getUserDetails = functions.https.onRequest(async (
-  /*http request object*/ request,
-  /* http response object*/ response
-) => {
+// Create HTTP [GET] request to fetch user details from db
+exports.getUserDetails = functions.https.onRequest(async (request, response) => {
   try {
-    //get all user details from db
     const userDetails = await db.get();
-    // new array created to storae all user details
     const users = [];
-    //iterate and extract email and password values and add to array
     userDetails.forEach((doc) => {
       users.push({
         id: doc.id,
         email: doc.data().email,
-        password: doc.data().password
+        password: doc.data().password,
       });
     });
-    //terminate request with user details from db
     response.send(users);
   } catch (error) {
-    //log error
     console.error(error);
-    //terminate request if an error occurs
     response.status(500).send(error);
   }
 });
 
+// Export the created Firebase Cloud Functions and Firestore triggers
+module.exports = {
+  auth,
+  user,
+  //book,
+  //onCreateUser,
+  //onCreateBook,
+};
