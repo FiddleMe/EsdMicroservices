@@ -1,8 +1,8 @@
 // Import Firebase Functions, Admin SDK, and API modules
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const { app: auths } = require('../api/authentication_api.js');
-const { service: users } = require('../api/userdetails_api.js');
+const { app: auths } = require('./api/authentication_api.js');
+const { service: users } = require('./api/userdetails_api.js');
 //const { service: books } = require('../api/books_api.js');
 
 // Firebase Cloud Functions based on Express apps
