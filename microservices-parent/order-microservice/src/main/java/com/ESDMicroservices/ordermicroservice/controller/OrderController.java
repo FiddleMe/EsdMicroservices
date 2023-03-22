@@ -30,8 +30,9 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String placeOrder(@RequestBody OrderRequest orderRequest) {
-        orderService.placeOrder(orderRequest, "testing", "hi");
+    public String placeOrder(@RequestBody OrderRequest orderRequest, @RequestParam String customerId,
+            @RequestParam String Mode) {
+        orderService.placeOrder(orderRequest, customerId, Mode);
         return "Order placed successfully";
     }
 
