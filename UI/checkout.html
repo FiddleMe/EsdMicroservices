@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="checkout.css">
 </head>
 <body>
+  <div id="app">
     <div class='container'>
         <div class='window'>
           <div class='order-info'>
@@ -16,18 +17,22 @@
                       <div class='line'></div>
               <table class='order-table'>
                 <tbody>
-                  <tr>
-                    <td><img src='https://dl.dropboxusercontent.com/s/sim84r2xfedj99n/%24_32.JPG' class='full-width'></img>
+                  <tr v-for="c in addedToCart">
+                    <td><img :src='pics[c.name]' class='full-width'></img>
                     </td>
                     <td>
-                      <br> <span class='thin'>Nike</span>
-                      <br> Free Run 3.0 Women<br> <span class='thin small'> Color: Grey/Orange, Size: 10.5<br><br></span>
+                      <br> <span class='thin'>{{c.name}}</span>
+                      <br> <span class='thin small'> 
+                      <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Quantity</span>
+                        <input type="number" value="1" v-model="qty[c.name]" class="form-control" aria-describedby="basic-addon1">
+                      </div> <br><br></span>
                     </td>
       
                   </tr>
                   <tr>
                     <td>
-                      <div class='price'>$99.95</div>
+                      <div class='price'> ${{c.price*qty[c.name]}}</div>
                     </td>
                   </tr>
                 </tbody>
@@ -119,6 +124,9 @@
               </div>
             </div>
           </div>
+  </div>
+    
 <script src="checkout.js"></script>
+<script src="menu.js"></script>
 </body>
 </html>
