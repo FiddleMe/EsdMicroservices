@@ -3,6 +3,11 @@ import {create, all, get, patch, remove} from "./controller";
 import {isAuthenticated} from "../auth/authenticated";
 import {isAuthorized} from "../auth/authorized";
 
+/**
+ * Configures the user routes for the application.
+ *
+ * @param {Application} app - The Express application instance.
+ */
 export function routesConfig(app: Application) {
   app.post("/users",
     isAuthenticated,
