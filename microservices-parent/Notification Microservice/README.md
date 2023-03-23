@@ -1,3 +1,5 @@
+Install node.js if not installed
+
 Setup rabbitmq
 1. Open Docker desktop
 2. ```sh
