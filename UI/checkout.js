@@ -11,9 +11,9 @@ cardDrop.addEventListener('click',function(){
 })
 
 window.onclick = function(e) {
-  console.log(e.target.tagName)
-  console.log('dropdown');
-  console.log(activeDropdown)
+  // console.log(e.target.tagName)
+  // console.log('dropdown');
+  // console.log(activeDropdown)
   if (e.target.tagName === 'LI' && activeDropdown){
     if (e.target.innerHTML === 'Master Card') {
       document.getElementById('credit-card-image').src = 'https://dl.dropboxusercontent.com/s/2vbqk5lcpi7hjoc/MasterCard_Logo.svg.png';
@@ -43,26 +43,26 @@ window.onclick = function(e) {
   }
 }
 
-// <div id='app'></div>
-const app = Vue.createApp({ 
-    data() { 
-        return { 
-            food: {}
-        };
-    }, // data
-    // computed: { 
-    //     derivedProperty() {
-    //         return false;
-    //     }  
-    // }, // computed
-    // created() { 
-    // },
-    // mounted() { 
-    // },
-    methods: {
-        methodName() {
+// // <div id='app'></div>
+// const app = Vue.createApp({ 
+//     data() { 
+//         return { 
+//             food: {}
+//         };
+//     }, // data
+//     // computed: { 
+//     //     derivedProperty() {
+//     //         return false;
+//     //     }  
+//     // }, // computed
+//     // created() { 
+//     // },
+//     // mounted() { 
+//     // },
+//     methods: {
+//         methodName() {
             
-        }
-    } // methods
-});
-const vm = app.mount('#app'); 
+//         }
+//     } // methods
+// });
+// const vm = app.mount('#app'); 

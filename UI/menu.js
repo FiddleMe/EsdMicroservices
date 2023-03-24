@@ -8,7 +8,7 @@ const app = Vue.createApp({
             "Eomuk": "https://futuredish.com/wp-content/uploads/2022/03/Eomuk-Tang.jpg",
             "Kimchi Jeon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_6UZEVHicPrwMLUiF6jx-o3WEjcaZg520GQ&usqp=CAU",
             "Bulgogi Kimbap": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToV4srjn50TiTZP9zZqVD3ptkmod280qa8Yw&usqp=CAU"},
-            addedToCart: [],
+            addedToCart: ["Samgyetang",2,3],
             qty: {}
         };
     }, // data
@@ -26,11 +26,21 @@ const app = Vue.createApp({
             .catch( error => {
                 console.log(error.message);
             });
-    }
+    },
     // mounted() { 
     // },
-    // methods: {
-    //     }
+    methods: {
+
+        updateQty(){
+            this.addedToCart.forEach(c => {
+                this.qty[c] = 1
+                // console.log(this.qty)
+            });
+        }
+
+        
+
+        }
     } // methods
 );
 const vm = app.mount('#app'); 
