@@ -1,0 +1,10 @@
+.bg-light {
+  background-color: #f2f4f9 !important;
+}
+
+.pb_icon-gradient {
+  background: #665fee; /* Old browsers */ /* FF3.6-15 */ /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(45deg, #665fee 0%, #27c2de 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}/*# sourceMappingURL=landing-1.css.map */
