@@ -47,9 +47,8 @@
 							<div class="descriptions">
 								<p>
 									{{m.description}}
-									{{addedToCart}}
 								</p>
-								<button class="btn btn-primary" v-bind:value="m.name" v-model="addedToCart"> Add to
+								<button class="btn btn-primary" @click="addToCart(m.name)"> Add to
 									Order </button>
 							</div>
 						</div>

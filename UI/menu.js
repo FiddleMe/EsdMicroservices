@@ -8,8 +8,9 @@ const app = Vue.createApp({
             "Eomuk": "https://futuredish.com/wp-content/uploads/2022/03/Eomuk-Tang.jpg",
             "Kimchi Jeon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_6UZEVHicPrwMLUiF6jx-o3WEjcaZg520GQ&usqp=CAU",
             "Bulgogi Kimbap": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToV4srjn50TiTZP9zZqVD3ptkmod280qa8Yw&usqp=CAU"},
-            addedToCart: ["Samgyetang",2,3],
-            qty: {}
+            addedToCart: [],
+            qty: {},
+            // total: 0
         };
     }, // data
     // computed: { 
@@ -26,6 +27,11 @@ const app = Vue.createApp({
             .catch( error => {
                 console.log(error.message);
             });
+        if (localStorage.getItem('orders')){
+            this.qty = JSON.parse(localStorage.getItem('orders'))
+            // console.log(this.qty)
+            localStorage.clear()
+        }
     },
     // mounted() { 
     // },
@@ -33,13 +39,34 @@ const app = Vue.createApp({
 
         updateQty(){
             this.addedToCart.forEach(c => {
-                this.qty[c] = 1
-                // console.log(this.qty)
+                if (!this.qty[c]){
+                    this.qty[c]=0
+                }
+                this.qty[c] += 1
+                localStorage.setItem('orders',JSON.stringify(this.qty))
+                // console.log(localStorage.getItem('orders'))
             });
+        },
+        addToCart(x){
+            this.addedToCart.push(x)
+            // console.log(this.addedToCart)
+            // localStorage.setItem('orders',JSON.stringify(this.qty))
+        },
+        getPrice(o){
+            for (m of this.menu){
+                if (m.name==o){
+                    return m.price
+                }
+            }
+        },
+        total(){
+            total = 0
+            for (x in this.qty){
+                // console.log(x)
+                total+= this.getPrice(x)*this.qty[x]
+            }
+            return total
         }
-
-        
-
         }
     } // methods
 );

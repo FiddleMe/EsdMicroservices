@@ -18,23 +18,25 @@
         <div class='window'>
           <div class='order-info'>
             <div class='order-info-content'>
-              <h2>Order Summary </h2>
-              <div class="container-fluid p-0" v-for="(c,idx) in addedToCart">
+              <h2>Order Summary {{menu[c]}} </h2>
+              <div class="container-fluid p-0" v-for="(c,idx) in qty">
                 <div class='line'></div>
               <table class='order-table mx-0'>
                 <tbody>
-                    <tr v-if="qty[c]=1">
-                      <td><img :src='pics[c.name]' class='full-width'></img>
-                      </td>
+                    <tr v-show="qty[idx]>=1">
+                      <!-- <td><img :src='pics[c]' style="width: 100px;"></img>
+                      </td> -->
                       <td class="p-0">
-                          <div class="row">
-                            <div class="col col-7 p-0">{{c}}</div>
+                          <div class="row align-items-center">
+                            <div class="col col-3">
+                              <img :src='pics[idx]' style="width: 100%;"></img>
+                            </div>
+                            <div class="col col-4 p-0">{{idx}}</div>
                             <div class="col col-2 p-0 justify-content-center">
                                 <div class="text-center">Qty</div>
-                                <input type="number" style="width: 100%; height: 30px;" v-model="qty[c]">
-                                {{qty[c]}}
+                                <input type="number" style="width: 100%; height: 30px;" v-model="qty[idx]"> 
                             </div>
-                            <div class='price col col-2 p-0'  v-if="qty[c]=1"> ${{c.price*qty[c]}}</div>
+                            <div class='price col col-2 p-0'>{{qty[idx]*getPrice(idx)}}</div>
                           </div>
                         </div>
                       </td>
@@ -49,7 +51,7 @@
                   TOTAL
                 </span>
                 <span style='float:right; text-align:right;'>
-                  $435.55
+                  ${{total()}}
                 </span>
               </div>
       </div>
