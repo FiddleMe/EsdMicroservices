@@ -1,2 +1,3 @@
 microservices-parent/product-service/target/classes/application.properties
 ./signup_login/node_modules
+node_modules
