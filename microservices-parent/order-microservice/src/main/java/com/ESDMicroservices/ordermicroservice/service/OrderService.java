@@ -1,10 +1,8 @@
 package com.ESDMicroservices.ordermicroservice.service;
 
-import java.lang.StackWalker.Option;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.sql.Update;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Service;
