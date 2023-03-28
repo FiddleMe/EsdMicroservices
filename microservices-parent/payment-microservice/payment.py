@@ -15,9 +15,9 @@ stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0
 # get link to pay
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-  # totalPrice = request.args.get("total")
+  order = request.get_json()
+  totalPrice = order["TotalPrice"]
   startTime = int(time.time()) #timing to set 30mins expiry
-  price = random.randint(50,20000) #to be replaced and deleted
   # create stripe refund object
   session = stripe.checkout.Session.create(
     # pass payment information to stripe
@@ -27,7 +27,7 @@ def create_checkout_session():
         'product_data': {
           'name': 'Total Bill',
         },
-        'unit_amount': price,
+        'unit_amount': totalPrice,
       },
       'quantity': 1,
     }],
@@ -91,4 +91,4 @@ def refundStatus():
   return json.dumps(dataDict, indent = 4)
 
 if __name__== '__main__':
-    app.run(host = '0.0.0.0', debug=True)
+    app.run(host = '0.0.0.0', debug=True, port=4242)

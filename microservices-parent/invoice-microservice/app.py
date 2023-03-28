@@ -73,7 +73,7 @@ def calculate_bill():
 
 @app.route("/refundBill", methods=['PUT'])
 def refund_bill():
-    updates = request.json()
+    updates = request.get_json()
     invoiceId = updates["InvoiceId"]
     SessionId = updates["SessionId"]
     PaymentIntentId = updates["PaymentIntentId"]
@@ -88,6 +88,28 @@ def refund_bill():
                 "RefundId": RefundId,
                 "RefundStatus": RefundStatus
             }}
+        )
+        if (response):
+            return {"status": 200}
+        else:
+            return {"status": 400, "error": "Failed to update invoice in database"}
+    except Exception as e:
+        return {"status": 500, "error": str(e)}
+
+# update specific field
+@app.route("/updateField", methods=['PUT'])
+def update_field():
+    updates = request.get_json()
+    print(updates)
+    InvoiceId = updates["InvoiceId"]
+    payload = {}
+    for [key, value] in updates.items():
+        if key != "InvoiceId":
+            payload[key] = value
+    try:
+        response = db.invoices.update_one(
+            {"InvoiceId": InvoiceId},
+            {"$set": payload}
         )
         if (response):
             return {"status": 200}
@@ -118,4 +140,4 @@ def update_paymentStatus():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=5000, debug=True)

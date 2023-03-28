@@ -13,6 +13,12 @@ get_order_URL = "http://localhost:8081/api/order/findOrderById"
 menu_url = "http://localhost:8080/api/product"
 create_invoice_url = "http://localhost:5000/calculate-bill"
 
+create_checkout_url = "http://127.0.0.1:5000/create-checkout-session"
+payment_status_url = "http://127.0.0.1:5000/paymentStatus" #pass in session_id at the back
+refund_url = "http://127.0.0.1:5000/refund" #pass in payment_intent at the back
+refund_status_url = "http://127.0.0.1:4242/refundStatus" #pass in refundID at the back
+
+
 # activity_log_URL = "http://localhost:5003/activity_log"
 # error_URL = "http://localhost:5004/error"
 app = Flask(__name__)
@@ -107,6 +113,18 @@ def processInvoice(orderId):
 
     return createInvoice
 
+# create checkout session, return session id
+@app.route("/checkoutSession", methods=['POST'])
+def createSession():
+    order = request.get_json()
+    totalPrice = order['TotalPrice']
+    requestBody = {
+        "TotalPrice":totalPrice
+    }
+    paymentSession = invoke_http(
+        create_checkout_url, method="POST", json=requestBody)
+    print(paymentSession)
+    return paymentSession
 
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) +
