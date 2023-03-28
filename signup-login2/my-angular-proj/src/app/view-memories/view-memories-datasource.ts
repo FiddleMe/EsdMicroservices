@@ -1,6 +1,5 @@
 import { DataSource } from '@angular/cdk/collections';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatPaginator, MatSort } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
 
@@ -40,11 +39,9 @@ const EXAMPLE_DATA: ViewMemoriesItem[] = [
  * (including sorting, pagination, and filtering).
  */
 export class ViewMemoriesDataSource extends DataSource<ViewMemoriesItem> {
-  data: ViewMemoriesItem[] = EXAMPLE_DATA;
-  paginator: MatPaginator | undefined;
-  sort: MatSort | undefined;
+  data: ViewMemoriesItem[] = [];
 
-  constructor() {
+  constructor(private paginator: MatPaginator, private sort: MatSort) {
     super();
   }
 
@@ -54,51 +51,51 @@ export class ViewMemoriesDataSource extends DataSource<ViewMemoriesItem> {
    * @returns A stream of the items to be rendered.
    */
   connect(): Observable<ViewMemoriesItem[]> {
-    if (this.paginator && this.sort) {
-      // Combine everything that affects the rendered data into one update
-      // stream for the data-table to consume.
-      return merge(observableOf(this.data), this.paginator.page, this.sort.sortChange)
-        .pipe(map(() => {
-          return this.getPagedData(this.getSortedData([...this.data ]));
-        }));
-    } else {
-      throw Error('Please set the paginator and sort on the data source before connecting.');
-    }
+    // Combine everything that affects the rendered data into one update
+    // stream for the data-table to consume.
+    const dataMutations = [
+      observableOf(this.data),
+      this.paginator.page,
+      this.sort.sortChange
+    ];
+
+    // Set the paginators length
+    this.paginator.length = this.data.length;
+
+    return merge(...dataMutations).pipe(map(() => {
+      return this.getPagedData(this.getSortedData([...this.data]));
+    }));
   }
 
   /**
    *  Called when the table is being destroyed. Use this function, to clean up
    * any open connections or free any held resources that were set up during connect.
    */
-  disconnect(): void {}
+  disconnect() {}
 
   /**
    * Paginate the data (client-side). If you're using server-side pagination,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getPagedData(data: ViewMemoriesItem[]): ViewMemoriesItem[] {
-    if (this.paginator) {
-      const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-      return data.splice(startIndex, this.paginator.pageSize);
-    } else {
-      return data;
-    }
+  private getPagedData(data: ViewMemoriesItem[]) {
+    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+    return data.splice(startIndex, this.paginator.pageSize);
   }
 
   /**
    * Sort the data (client-side). If you're using server-side sorting,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getSortedData(data: ViewMemoriesItem[]): ViewMemoriesItem[] {
-    if (!this.sort || !this.sort.active || this.sort.direction === '') {
+  private getSortedData(data: ViewMemoriesItem[]) {
+    if (!this.sort.active || this.sort.direction === '') {
       return data;
     }
 
     return data.sort((a, b) => {
-      const isAsc = this.sort?.direction === 'asc';
-      switch (this.sort?.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
-        case 'id': return compare(+a.id, +b.id, isAsc);
+      const isAsc = this.sort.direction === 'asc';
+      switch (this.sort.active) {
+        case 'text': return compare(a.name, b.name, isAsc);
+        case 'date': return compare(+a.id, +b.id, isAsc);
         default: return 0;
       }
     });
@@ -106,6 +103,6 @@ export class ViewMemoriesDataSource extends DataSource<ViewMemoriesItem> {
 }
 
 /** Simple sort comparator for example ID/Name columns (for client-side sorting). */
-function compare(a: string | number, b: string | number, isAsc: boolean): number {
+function compare(a: string | number, b: string | number, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
