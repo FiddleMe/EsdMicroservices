@@ -12,7 +12,7 @@ export type UpdateUserRequest = { uid: string } & CreateUserRequest;
 })
 export class UserService {
 
-  private baseUrl = 'https://us-central1-joaq-lab.cloudfunctions.net/api/users'
+  private baseUrl = 'http://localhost:5000/esd-login-signup/us-central1/api'
 
   constructor(
     private http: HttpClient

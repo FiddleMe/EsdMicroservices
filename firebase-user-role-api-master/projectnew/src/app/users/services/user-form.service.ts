@@ -11,7 +11,7 @@ export class UserFormService {
 
   constructor() { }
 
-  edit(user) {
+  edit(user: any) {
     this._BS.next({ title: 'Edit User', user });
   }
 
