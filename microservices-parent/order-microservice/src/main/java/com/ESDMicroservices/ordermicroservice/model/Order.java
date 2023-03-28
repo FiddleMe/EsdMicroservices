@@ -1,10 +1,6 @@
 package com.ESDMicroservices.ordermicroservice.model;
 
-import java.math.BigDecimal;
-import java.sql.Array;
 import java.util.List;
-
-import org.hibernate.annotations.ForeignKey;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

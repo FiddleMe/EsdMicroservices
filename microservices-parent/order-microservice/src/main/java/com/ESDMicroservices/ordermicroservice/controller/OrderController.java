@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,10 +29,11 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String placeOrder(@RequestBody OrderRequest orderRequest, @RequestParam String customerId,
+    public ResponseEntity<String> placeOrder(@RequestBody OrderRequest orderRequest, @RequestParam String customerId,
             @RequestParam String Mode) {
         orderService.placeOrder(orderRequest, customerId, Mode);
-        return "Order placed successfully";
+        String message = "Order placed successfully";
+        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"" + message + "\"}");
     }
 
     @GetMapping
