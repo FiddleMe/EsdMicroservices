@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatPaginator, MatSort } from '@angular/material';
+import { MatSort } from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
 import { ViewMemoriesDataSource, ViewMemoriesItem } from './view-memories-datasource';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Subscription } from 'rxjs';
@@ -12,13 +13,15 @@ import { map, first } from 'rxjs/operators';
 })
 export class ViewMemoriesComponent implements OnInit, OnDestroy {
   
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  dataSource: ViewMemoriesDataSource;
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+  @ViewChild(MatSort)
+  sort!: MatSort;
+  dataSource!: ViewMemoriesDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['date', 'text'];
-  subscription: Subscription;
+  subscription!: Subscription;
 
   constructor(private db: AngularFireDatabase) {
 
