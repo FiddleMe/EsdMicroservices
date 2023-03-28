@@ -11,6 +11,8 @@ import json
 order_URL = "http://localhost:8081/api/order"
 get_order_URL = "http://localhost:8081/api/order/findOrderById"
 menu_url = "http://localhost:8080/api/product"
+create_invoice_url = "http://localhost:5000/calculate-bill"
+
 # activity_log_URL = "http://localhost:5003/activity_log"
 # error_URL = "http://localhost:5004/error"
 app = Flask(__name__)
@@ -46,7 +48,7 @@ def place_order():
     }), 400
 
 
-@app.route("/requestInvoice", method=['GET'])
+@app.route("/requestInvoice", methods=['POST'])
 def requestInvoice():
     if request.is_json:
         try:
@@ -94,6 +96,16 @@ def processInvoice(orderId):
     orderId = orderId["orderId"]
     order = invoke_http(get_order_URL, method='GET',
                         params={'OrderId': orderId})
+    menu = invoke_http(menu_url, method="GET")
+    requestBody = {
+        "order": order,
+        "menu": menu
+    }
+    createInvoice = invoke_http(
+        create_invoice_url, method="POST", json=requestBody)
+    print("create invoicer result:", createInvoice)
+
+    return createInvoice
 
 
 if __name__ == "__main__":
