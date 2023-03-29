@@ -118,7 +118,7 @@ def update_field():
             key_dict,
             {"$set": payload}
         )
-        if (response):
+        if (response.modified_count == 1):
             return {"status": 200}
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}

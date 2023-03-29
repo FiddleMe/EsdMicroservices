@@ -20,7 +20,7 @@ payment_status_url = "http://127.0.0.1:4242/paymentStatus" #pass in session_id a
 refund_url = "http://127.0.0.1:4242/refund" #pass in payment_intent at the back
 refund_status_url = "http://127.0.0.1:4242/refundStatus" #pass in refundID at the back
 update_field_url = "http://127.0.0.1:5000/updateField"
-
+stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0cTCPZUGCEFPAUXo59zcLa0EMK7CoCSY11LE00JZafQOs4'
 
 # activity_log_URL = "http://localhost:5003/activity_log"
 # error_URL = "http://localhost:5004/error"
@@ -126,52 +126,89 @@ def createSession():
         "TotalPrice":totalPrice
     }
     # create payment session
-    paymentSession = invoke_http(
-        create_checkout_url, method="POST", json=requestBody)
-    print(paymentSession)
-
-    requestBody = {
-        "InvoiceId":InvoiceId,
-        "SessionId":paymentSession["sessionID"]
-    }
-    # update Sessionid
-    update = invoke_http(
-        update_field_url, method="PUT", json=requestBody)
     
-    return paymentSession #link and SessionId
+    try:
+        paymentSession = invoke_http(
+            create_checkout_url, method="POST", json=requestBody)
+        print(paymentSession)
 
-# after payment, update payment intent. pass in session_id
+        requestBody = {
+            "InvoiceId":InvoiceId,
+            "SessionId":paymentSession["sessionID"]
+        }
+    # update Sessionid
+        update = invoke_http(
+            update_field_url, method="PUT", json=requestBody)
+        if (update["status"] == 200 ):
+            return {"status": 200, "data" : paymentSession} #link and SessionId
+        else:
+            return {"status": 400, "error": "Failed to update invoice in database"}
+    except Exception as e:
+        return {"status": 500, "error": "There seem to be an error creating payment session"}
+
+# after payment, update payment intent. pass in session_id, this is automated
 @app.route("/updatePI", methods=['GET'])
 def updatePI():
-    requests = request.get_json()
-    
-    SessionId = requests['SessionId']
-    if SessionId == None:
-        SessionId = stripe.checkout.Session.retrieve(request.args.get('session_id'))
+    session_obj = stripe.checkout.Session.retrieve(request.args.get('SessionId'))
+    SessionId = session_obj["id"]
+    print("sessionid here  " + SessionId)
     # get pi status by calling sessionid
     piRequestBody = {
         "session_id": SessionId
     }   
     # get pi
-    pi_obj = invoke_http(
-        payment_status_url, method="GET", json=piRequestBody)
-    pi = pi_obj["pi"]
-    PaymentStatus = pi_obj["PaymentStatus"]
-    # update database with pi and PaymentStatus to be used if there is refund
-    requestBody = {
-        "SessionId":SessionId,
-        "PaymentIntentId": pi,
-        "PaymentStatus": PaymentStatus
-    }
-    # update Sessionid
-    update = invoke_http(
-        update_field_url, method="PUT", json=requestBody)    
-
-    return pi_obj
+    try: 
+        pi_obj = invoke_http(
+            payment_status_url, method="GET", json=piRequestBody)
+        pi = pi_obj["pi"]
+        PaymentStatus = pi_obj["PaymentStatus"]
+        # update database with pi and PaymentStatus to be used if there is refund
+        requestBody = {
+            "SessionId":SessionId,
+            "PaymentIntentId": pi,
+            "PaymentStatus": PaymentStatus
+        }
+        # update Sessionid
+        update = invoke_http(
+            update_field_url, method="PUT", json=requestBody)  
+        if (update["status"] == 200 ):
+            return {"status": 200, "data" : pi_obj} #PaymentStatus, pi, sessionID
+        else:
+            return {"status": 400, "error": "Failed to update invoice in database"}
+    except Exception as e:
+        return {"status": 500, "error": "There seem to be an error fetching payment intent"}          
 
 # send in PaymentIntentId to initiate refund
 @app.route("/refund", methods=['GET'])
 def refund():
+    requests = request.get_json()
+    pi = requests['pi']
+    piRequestBody = {
+        "pi": pi
+    }   
+    # get and update RefundId and RefudnStatus
+    try:
+        refund_obj = invoke_http(
+            refund_url, method="GET", json=piRequestBody)
+        print(refund_obj)
+        requestBody = {
+            "PaymentIntentId" : pi,
+            "RefundId" : refund_obj["refundID"],
+            "RefundStatus" : refund_obj["refundStatus"]
+        }
+        # update Sessionid
+        update = invoke_http(
+            update_field_url, method="PUT", json=requestBody)    
+        if (update["status"] == 200 ):
+            return {"status": 200, "data" : refund_obj} #
+        else:
+            return {"status": 400, "error": "Failed to update invoice in database"}
+    except Exception as e:
+        return {"status": 500, "error": "There seem to be an error creating refund"}     
+
+# get refund status and update database, this is for customer to check status
+@app.route("/refundStatus", methods=['GET'])
+def refundStatus():
     requests = request.get_json()
     pi = requests['pi']
     piRequestBody = {
@@ -190,6 +227,8 @@ def refund():
     update = invoke_http(
         update_field_url, method="PUT", json=requestBody)    
     return refund_obj
+
+
 
 if __name__ == "__main__":
     print("This is flask " + os.path.basename(__file__) +
