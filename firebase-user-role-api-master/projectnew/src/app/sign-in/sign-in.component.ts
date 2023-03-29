@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
@@ -23,8 +23,8 @@ export class SignInComponent implements OnInit {
   async signIn() {
     try {
       const { email, password } = this.form.value
-      console.log(email)
-      await this.afAuth.auth.signInWithEmailAndPassword(email, password)
+      console.log("hello",email)
+      await this.afAuth.signInWithEmailAndPassword(email, password)
       this.modal.close()
     } catch (err) {
       console.log(err)

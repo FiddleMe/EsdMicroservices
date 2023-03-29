@@ -1,4 +1,4 @@
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Injectable, Inject } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { switchMap, take } from 'rxjs/operators';
 export class AuthTokenHttpInterceptor implements HttpInterceptor {
 
     constructor(
-        @Inject(AngularFireAuth) private auth: AngularFireAuth 
+        private auth: AngularFireAuth 
     ) {
 
     }

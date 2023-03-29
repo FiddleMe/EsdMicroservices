@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { UsersComponent } from './users/users.component';
+import { UsersComponent } from './users/user.component';
+//'./users/users.component'
 import { redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
 
 const routes: Routes = [{

@@ -1,10 +1,10 @@
-import { UserService } from './../services/user.service';
+import { UserService } from './../services/user-service';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { User } from '../models/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserFormComponent } from '../user-form/user-form.component';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { switchMap, filter } from 'rxjs/operators';
 import { UserFormService } from '../services/user-form.service';
 
@@ -15,8 +15,8 @@ import { UserFormService } from '../services/user-form.service';
 })
 export class UsersComponent implements OnInit {
 
-  users$: Observable<User[]>;
-  user$: Observable<User>;
+  users$!: Observable<User[]>;
+  user$!: Observable<User>;
 
   constructor(
     private userService: UserService,
@@ -30,12 +30,18 @@ export class UsersComponent implements OnInit {
 
     this.user$ = this.afAuth.user.pipe(
       filter(user => !!user),
-      switchMap(user => this.userService.user$(user.uid))
+      switchMap(user => {
+        if (user !== null){
+          return this.userService.user$(user.uid);
+        }
+        else{
+          return EMPTY;
+        }
+      })
     );
-  }
-
+    }
   create() {
-    this.userForm.create();
+    this.userForm.create({});
     const modalRef = this.modal.open(UserFormComponent);
     modalRef.result.then(user => {
       this.userService.create(user).subscribe(_ => {
@@ -46,7 +52,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  edit(userToEdit) {
+  edit(userToEdit: any) {
     this.userForm.edit(userToEdit);
     const modalRef = this.modal.open(UserFormComponent);
     // once user form pop up is closed, we get the value as a result

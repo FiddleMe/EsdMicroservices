@@ -15,8 +15,8 @@ export class UserFormService {
     this._BS.next({ title: 'Edit User', user });
   }
 
-  create() {
-    this._BS.next({ title: 'Create User', user: null });
+  create(user: any) {
+    this._BS.next({ title: 'Create User', user: {} });
   }
 
   get title$() {

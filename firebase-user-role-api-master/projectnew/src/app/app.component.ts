@@ -1,4 +1,4 @@
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Component, Inject, OnInit, Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SignInComponent } from './sign-in/sign-in.component';
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
   }
 
   async signOut() {
-    await this.afAuth.auth.signOut()
+    await this.afAuth.signOut()
     await this.router.navigateByUrl("/")
   }
 
