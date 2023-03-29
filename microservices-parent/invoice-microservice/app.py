@@ -101,14 +101,21 @@ def refund_bill():
 def update_field():
     updates = request.get_json()
     print(updates)
-    InvoiceId = updates["InvoiceId"]
+    if "InvoiceId" in updates.keys():
+        key_dict = {"InvoiceId" : updates["InvoiceId"]}
+        print(key_dict)
+    elif "SessionId" in updates.keys():
+        key_dict = {"SessionId" : updates["SessionId"]}
+        print(key_dict)
+    else:
+        key_dict = {"PaymentIntentId" : updates["PaymentIntentId"]}
     payload = {}
     for [key, value] in updates.items():
-        if key != "InvoiceId":
+        if key != "InvoiceId" or key != "SessionId":
             payload[key] = value
     try:
         response = db.invoices.update_one(
-            {"InvoiceId": InvoiceId},
+            key_dict,
             {"$set": payload}
         )
         if (response):
