@@ -20,6 +20,7 @@ payment_status_url = "http://127.0.0.1:4242/paymentStatus" #pass in session_id a
 refund_url = "http://127.0.0.1:4242/refund" #pass in payment_intent at the back
 refund_status_url = "http://127.0.0.1:4242/refundStatus" #pass in refundID at the back
 update_field_url = "http://127.0.0.1:5000/updateField"
+search_url = "http://127.0.0.1:5000/search" #pass in any unique id to find data from invoices collection
 stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0cTCPZUGCEFPAUXo59zcLa0EMK7CoCSY11LE00JZafQOs4'
 
 # activity_log_URL = "http://localhost:5003/activity_log"
@@ -210,23 +211,38 @@ def refund():
 @app.route("/refundStatus", methods=['GET'])
 def refundStatus():
     requests = request.get_json()
-    pi = requests['pi']
-    piRequestBody = {
-        "pi": pi
-    }   
-    # get and update RefundId and RefudnStatus
-    refund_obj = invoke_http(
-        refund_url, method="GET", json=piRequestBody)
-    print(refund_obj)
+    RefundId = requests['RefundId']
     requestBody = {
-        "PaymentIntentId" : pi,
-        "RefundId" : refund_obj["refundID"],
-        "RefundStatus" : refund_obj["refundStatus"]
-    }
-    # update Sessionid
-    update = invoke_http(
-        update_field_url, method="PUT", json=requestBody)    
-    return refund_obj
+        "RefundId": RefundId
+    }   
+
+    try:
+        # get refund obj
+        refund_obj = invoke_http(
+            refund_status_url, method="GET", json=requestBody)
+        print(refund_obj)
+
+        # get InvoiceId using RefundId
+        data_obj = invoke_http(
+            search_url, method="GET", json=requestBody)
+        print(data_obj)
+        InvoiceId = data_obj["data"]["InvoiceId"]
+
+        # update database with status
+        requestBody = {
+            "InvoiceId" : InvoiceId,
+            "RefundStatus" : refund_obj["refundStatus"]
+        }
+        update = invoke_http(
+            update_field_url, method="PUT", json=requestBody) 
+        if (update["status"] == 200 ):
+            return {"status": 200, "data" : refund_obj} #
+        else:
+            return {"status": 400, "error": "Failed to update invoice in database"}
+    except Exception as e:
+        return {"status": 500, "error": "There seem to be an error fetching refund data"}     
+       
+    
 
 
 

@@ -81,7 +81,8 @@ def refund():
 # get refund status
 @app.route('/refundStatus')
 def refundStatus():
-  refundID = request.args.get("re")
+  refund_data = request.get_json()
+  refundID = refund_data["RefundId"]
   # get stripe refund object
   refund = stripe.Refund.retrieve(
     refundID

@@ -124,6 +124,22 @@ def update_field():
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
         return {"status": 500, "error": str(e)}
+    
+# search invoices collection for specific data using either InvoiceId, PaymentIntentId, SessionId, RefundId (anything unique)
+@app.route("/search", methods=['GET'])
+def search():
+    updates = request.get_json()
+    query_dict = {}
+    updates = list(updates.items())[0]
+    query_dict = {updates[0] : updates[1]}
+    try:
+        response = db.invoices.find_one(query_dict)
+        if (response):
+            return {"status": 200, "data" : response}
+        else:
+            return {"status": 400, "error": "Failed to find invoice data in database"}
+    except Exception as e:
+        return {"status": 500, "error": str(e)}
 
 
 @app.route("/updatePaymentStatus", methods=['PUT'])
