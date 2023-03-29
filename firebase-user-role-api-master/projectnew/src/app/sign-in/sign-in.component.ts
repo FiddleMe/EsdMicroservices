@@ -23,7 +23,7 @@ export class SignInComponent implements OnInit {
   async signIn() {
     try {
       const { email, password } = this.form.value
-      console.log("hello",email)
+      console.log(email)
       await this.afAuth.signInWithEmailAndPassword(email, password)
       this.modal.close()
     } catch (err) {
