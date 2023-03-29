@@ -8,6 +8,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("dbURL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+CORS(app)
 
 class Feedback(db.Model):
     __tablename__ = "feedback"
