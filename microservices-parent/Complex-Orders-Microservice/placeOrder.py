@@ -192,6 +192,13 @@ def refund():
         refund_obj = invoke_http(
             refund_url, method="GET", json=piRequestBody)
         print(refund_obj)
+
+        # recipient = "owg321@gmail.com"
+        # status_msg = "Refund Initiated"
+        
+        # message_service = invoke_http(
+        #     f"http://localhost:4001/send-msg?recipient='{recipient}'&status_msg='{status_msg}'", method="GET")
+        # print(message_service + "...")
         requestBody = {
             "PaymentIntentId" : pi,
             "RefundId" : refund_obj["refundID"],
@@ -205,7 +212,7 @@ def refund():
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "There seem to be an error creating refund"}     
+        return {"status": 500, "error": "Failed to create refund, it is likely that refund has already been initiated for this payment intent"}     
 
 # get refund status and update database, this is for customer to check status
 @app.route("/refundStatus", methods=['GET'])
