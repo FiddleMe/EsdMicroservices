@@ -58,46 +58,42 @@ def return_pos_vs_neg():
 
 @app.route("/analytics/top_menu_items")
 def top_menu_items():
-    """orders_json = invoke_http(order_url, method='GET')
-    #next two lines are entirely speculative - order microservice idk how to use
-    orders_dict = orders_json["data"]
-    orders_list = orders_dict["all_orders"]"""
-    # Note: the data below is entirely test data. This is strictly temporary.
-    orders_list = [
-        {
-            "orderLineItemsList": [
-                {
-                    "id": 1,
-                    "product_name": "iphone_13",
-                    "quantity": 1
-                },
-                {
-                    "id": 2,
-                    "product_name": "jangmeyon",
-                    "quantity": 1
-                }
-            ],
-            "orderId": 1,
-            "customerId": "testing",
-            "modeOfEating": "hi",
-            "invoiceId": "None",
-            "status": "Preorder"
-        },
-        {
-            "orderLineItemsList": [
-                {
-                    "id": 3,
-                    "product_name": "Bibimbap",
-                    "quantity": 1
-                }
-            ],
-            "orderId": 2,
-            "customerId": "testing",
-            "modeOfEating": "hi",
-            "invoiceId": "None",
-            "status": "Preorder"
-        }
-    ]
+    orders_list = invoke_http(order_url, method='GET')
+    # orders_list = [
+    #     {
+    #         "orderLineItemsList": [
+    #             {
+    #                 "id": 1,
+    #                 "product_name": "iphone_13",
+    #                 "quantity": 1
+    #             },
+    #             {
+    #                 "id": 2,
+    #                 "product_name": "jangmeyon",
+    #                 "quantity": 1
+    #             }
+    #         ],
+    #         "orderId": 1,
+    #         "customerId": "testing",
+    #         "modeOfEating": "hi",
+    #         "invoiceId": "None",
+    #         "status": "Preorder"
+    #     },
+    #     {
+    #         "orderLineItemsList": [
+    #             {
+    #                 "id": 3,
+    #                 "product_name": "Bibimbap",
+    #                 "quantity": 1
+    #             }
+    #         ],
+    #         "orderId": 2,
+    #         "customerId": "testing",
+    #         "modeOfEating": "hi",
+    #         "invoiceId": "None",
+    #         "status": "Preorder"
+    #     }
+    # ]
 
     if len(orders_list):
         order_item_and_qty = {}
@@ -128,46 +124,44 @@ def top_menu_items():
     
 @app.route("/analytics/mode_of_eating")
 def preferred_mode_of_eating():
-    """orders_json = invoke_http(order_url, method='GET')
+    orders_list = invoke_http(order_url, method='GET')
     #next two lines are entirely speculative - order microservice idk how to use
-    orders_dict = orders_json["data"]
-    orders_list = orders_dict["all_orders"]"""
     # Note: the data below is entirely test data. This is strictly temporary.
-    orders_list = [
-        {
-            "orderLineItemsList": [
-                {
-                    "id": 1,
-                    "product_name": "iphone_13",
-                    "quantity": 1
-                },
-                {
-                    "id": 2,
-                    "product_name": "jangmeyon",
-                    "quantity": 1
-                }
-            ],
-            "orderId": 1,
-            "customerId": "testing",
-            "modeOfEating": "hi",
-            "invoiceId": "None",
-            "status": "Preorder"
-        },
-        {
-            "orderLineItemsList": [
-                {
-                    "id": 3,
-                    "product_name": "Bibimbap",
-                    "quantity": 1
-                }
-            ],
-            "orderId": 2,
-            "customerId": "testing",
-            "modeOfEating": "hi",
-            "invoiceId": "None",
-            "status": "Preorder"
-        }
-    ]
+    # orders_list = [
+    #     {
+    #         "orderLineItemsList": [
+    #             {
+    #                 "id": 1,
+    #                 "product_name": "iphone_13",
+    #                 "quantity": 1
+    #             },
+    #             {
+    #                 "id": 2,
+    #                 "product_name": "jangmeyon",
+    #                 "quantity": 1
+    #             }
+    #         ],
+    #         "orderId": 1,
+    #         "customerId": "testing",
+    #         "modeOfEating": "hi",
+    #         "invoiceId": "None",
+    #         "status": "Preorder"
+    #     },
+    #     {
+    #         "orderLineItemsList": [
+    #             {
+    #                 "id": 3,
+    #                 "product_name": "Bibimbap",
+    #                 "quantity": 1
+    #             }
+    #         ],
+    #         "orderId": 2,
+    #         "customerId": "testing",
+    #         "modeOfEating": "hi",
+    #         "invoiceId": "None",
+    #         "status": "Preorder"
+    #     }
+    # ]
 
     if len(orders_list):
         modes_of_eating = {}

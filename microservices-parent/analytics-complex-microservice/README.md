@@ -17,3 +17,93 @@
     127.0.0.1:5010/analytics/mode_of_eating
     127.0.0.1:5010/analytics/top_words
    In all of them, a JSON with code value of 200 should appear in the browser.
+
+Analytics microservice example outputs:
+127.0.0.1:5010/analytics/top_words
+returns the 5 most common positive and 5 most common negative words in json format
+{
+  "code": 200,
+  "data": {
+    "most common negative words": [
+      [
+        "i",
+        2
+      ],
+      [
+        "food",
+        2
+      ],
+      [
+        "like",
+        1
+      ],
+      [
+        "much",
+        1
+      ],
+      [
+        "meh",
+        1
+      ]
+    ],
+    "most common positive words": [
+      [
+        "good",
+        6
+      ],
+      [
+        "food",
+        5
+      ],
+      [
+        "the",
+        3
+      ],
+      [
+        "i",
+        3
+      ],
+      [
+        "service",
+        2
+      ]
+    ]
+  }
+}
+
+127.0.0.1:5010/analytics/pos_neg_percent
+returns percentages of positive and negative feedback in json format
+{
+  "code": 200,
+  "data": {
+    "feedback_percentages": {
+      "negative feedback": "20.00%",
+      "positive feedback": "80.00%"
+    }
+  }
+}
+
+127.0.0.1:5010/analytics/top_menu_items
+returns top 5 menu items based on total orders in json format
+{
+  "code": 200,
+  "data": {
+    "jangmeyon": 4,
+    "tteakbokki": 3,
+    "chicken": 3,
+    "beef": 2,
+    "kimchi": 1,
+
+  }
+}
+
+127.0.0.1:5010/analytics/mode_of_eating
+returns percentage of different modes of eating in json format
+{
+  "code": 200,
+  "data": {
+    "eat_in": "50.00%"
+    "eat_out": "50.00%"
+  }
+}
+
