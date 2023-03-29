@@ -6,15 +6,14 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { HttpClientModule } from '@angular/common/http';
 
 
-
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { UsersModule } from './users/users.module';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
 import { AuthTokenHttpInterceptorProvider } from './http-interceptors/auth-token.interceptor';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +21,6 @@ import { FormsModule } from '@angular/forms';
     SignInComponent  
   ],
   imports: [
-    FormsModule,
     BrowserModule,
     RouterModule.forRoot([]),
     AngularFireModule.initializeApp(environment.firebase),
@@ -30,7 +28,9 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     UsersModule,
     NgbModule,
-    ReactiveFormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    
   ],
   entryComponents: [
     SignInComponent

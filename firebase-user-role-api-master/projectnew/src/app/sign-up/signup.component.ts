@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -7,40 +6,31 @@ import { AuthService } from './auth.service';
   template: `
     <div>
       <h2>Sign Up</h2>
-      <form [formGroup]="form" (submit)="onSubmit()">
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" formControlName="email" class="form-control">
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" formControlName="password" class="form-control">
-        </div>
-        <button type="submit" [disabled]="!form.valid">Sign Up</button>
+      <form (submit)="onSubmit()">
+        <label>
+          Email:
+          <input type="email" [(ngModel)]="email" name="email">
+        </label>
+        <br>
+        <label>
+          Password:
+          <input type="password" [(ngModel)]="password" name="password">
+        </label>
+        <br>
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   `
 })
-export class SignUpComponent implements OnInit {
+export class SignUpComponent {
 
-  form!: FormGroup;
+  email: string = '';
+  password: string = '';
 
-  constructor(
-    private authService: AuthService,
-    private fb: FormBuilder
-  ) { }
-
-  ngOnInit() {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
-  }
+  constructor(private authService: AuthService) { }
 
   onSubmit() {
-    const email = this.form.value.email;
-    const password = this.form.value.password;
-    this.authService.signUp(email, password)
+    this.authService.signUp(this.email, this.password)
       .then(() => {
         console.log('User created successfully!');
       })
@@ -48,5 +38,4 @@ export class SignUpComponent implements OnInit {
         console.error('Error creating user:', error);
       });
   }
-
 }
