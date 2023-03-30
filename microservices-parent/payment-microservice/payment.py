@@ -6,7 +6,8 @@ import time
 import random
 import json
 
-from flask import Flask, request
+
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -15,9 +16,9 @@ stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0
 # get link to pay
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-  # totalPrice = request.args.get("total")
+  order = request.get_json()
+  totalPrice = order["TotalPrice"]
   startTime = int(time.time()) #timing to set 30mins expiry
-  price = random.randint(50,20000) #to be replaced and deleted
   # create stripe refund object
   session = stripe.checkout.Session.create(
     # pass payment information to stripe
@@ -27,14 +28,13 @@ def create_checkout_session():
         'product_data': {
           'name': 'Total Bill',
         },
-        'unit_amount': price,
+        'unit_amount': totalPrice,
       },
       'quantity': 1,
     }],
     mode='payment',
     expires_at = startTime + 1800,
-    success_url=f'http://localhost:4242/success/',
-    cancel_url=f'http://localhost:4242/cancel/',
+    success_url='http://127.0.0.1:5100/updatePI?SessionId={CHECKOUT_SESSION_ID}'
   )
 
   dataDict = {
@@ -42,12 +42,13 @@ def create_checkout_session():
     "sessionID": session.id,
   }
 
-  return json.dumps(dataDict, indent = 4)
+  return jsonify(dataDict)
 
 #get payment status and payment intent id
 @app.route('/paymentStatus')
 def paymentStatus():
-  session_id = request.args.get('session_id')
+  order = request.get_json()
+  session_id = order["session_id"]
   # get stripe checkout object
   session = stripe.checkout.Session.retrieve(
     session_id,
@@ -55,16 +56,17 @@ def paymentStatus():
   
   dataDict = {
       "sessionID" : session_id,
-      "paymentStatus" : session.payment_status,
+      "PaymentStatus" : session.payment_status,
       "pi" : session.payment_intent
   }
 
-  return json.dumps(dataDict, indent = 4)
+  return jsonify(dataDict)
 
 # refund
 @app.route('/refund')
 def refund():
-  paymentIntent = request.args.get("pi")
+  refund_data = request.get_json()
+  paymentIntent = refund_data["pi"]
   # create stripe refund object
   refund = stripe.Refund.create(payment_intent = paymentIntent)
   
@@ -74,12 +76,13 @@ def refund():
       "refundStatus" : refund.status
   }
 
-  return dataDict
+  return jsonify(dataDict)
 
 # get refund status
 @app.route('/refundStatus')
 def refundStatus():
-  refundID = request.args.get("re")
+  refund_data = request.get_json()
+  refundID = refund_data["RefundId"]
   # get stripe refund object
   refund = stripe.Refund.retrieve(
     refundID
@@ -88,7 +91,7 @@ def refundStatus():
       "refundID" : refundID,
       "refundStatus" : refund.status
   }
-  return json.dumps(dataDict, indent = 4)
+  return jsonify(dataDict)
 
 if __name__== '__main__':
-    app.run(host = '0.0.0.0', debug=True)
+    app.run(host = '0.0.0.0', debug=True, port=4242)

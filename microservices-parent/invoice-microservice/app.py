@@ -73,7 +73,7 @@ def calculate_bill():
 
 @app.route("/refundBill", methods=['PUT'])
 def refund_bill():
-    updates = request.json()
+    updates = request.get_json()
     invoiceId = updates["InvoiceId"]
     SessionId = updates["SessionId"]
     PaymentIntentId = updates["PaymentIntentId"]
@@ -93,6 +93,58 @@ def refund_bill():
             return {"status": 200}
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
+    except Exception as e:
+        return {"status": 500, "error": str(e)}
+
+# update specific field
+@app.route("/updateField", methods=['PUT'])
+def update_field():
+    updates = request.get_json()
+    print(updates)
+    if "InvoiceId" in updates.keys():
+        key_dict = {"InvoiceId" : updates["InvoiceId"]}
+        print(key_dict)
+    elif "SessionId" in updates.keys():
+        key_dict = {"SessionId" : updates["SessionId"]}
+        print(key_dict)
+    else:
+        key_dict = {"PaymentIntentId" : updates["PaymentIntentId"]}
+    payload = {}
+    for [key, value] in updates.items():
+        if key != "InvoiceId" or key != "SessionId":
+            payload[key] = value
+    try:
+        response = db.invoices.update_one(
+            key_dict,
+            {"$set": payload}
+        )
+        if response.acknowledged:
+            if response.modified_count == 1:
+                return {"status": 200, "message": "Update succcessful"}
+            else:
+                return {"status": 200, "message": "There is no change in field so nothing is updated"}
+        else:
+            return {"status": 400, "error": "Failed to update invoice in database"}
+        # if (response.modified_count == 1):
+        #     return {"status": 200}
+        # else:
+        #     return {"status": 400, "error": "Failed to update invoice in database"}
+    except Exception as e:
+        return {"status": 500, "error": str(e)}
+    
+# search invoices collection for specific data using either InvoiceId, PaymentIntentId, SessionId, RefundId (anything unique)
+@app.route("/search", methods=['GET'])
+def search():
+    updates = request.get_json()
+    query_dict = {}
+    updates = list(updates.items())[0]
+    query_dict = {updates[0] : updates[1]}
+    try:
+        response = db.invoices.find_one(query_dict)
+        if (response):
+            return {"status": 200, "data" : response}
+        else:
+            return {"status": 400, "error": "Failed to find invoice data in database"}
     except Exception as e:
         return {"status": 500, "error": str(e)}
 
@@ -118,4 +170,4 @@ def update_paymentStatus():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=5000, debug=True)
