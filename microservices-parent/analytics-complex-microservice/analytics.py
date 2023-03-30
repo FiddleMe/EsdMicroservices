@@ -107,7 +107,7 @@ def top_menu_items():
                 else:
                     order_item_and_qty[order_item] += qty
         number_of_items = 5
-        result = dict(sorted(order_item_and_qty.items(), key = lambda x: x[1], reverse = True)[:number_of_items])
+        result = list(dict(sorted(order_item_and_qty.items(), key = lambda x: x[1], reverse = True)[:number_of_items]).keys())
         return jsonify(
             {
                 "code": 200,
