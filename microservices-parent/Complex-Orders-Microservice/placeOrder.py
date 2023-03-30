@@ -239,6 +239,20 @@ def refund():
         # message_service = invoke_http(
         #     f"http://localhost:4001/send-msg?recipient='{recipient}'&status_msg='{status_msg}'", method="GET")
         # print(message_service + "...")
+        
+        # publish message to rabbitmq
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host=hostname, port=port,
+                                      heartbeat=3600, blocked_connection_timeout=3600))
+        channel = connection.channel()
+        channel.queue_declare(queue='update-status', durable=True)
+        message = {'recipient': 'owg321@gmail.com',
+                   'status_msg': f'Refund Initiated ({pi})'}
+        channel.basic_publish(exchange='',
+                              routing_key='update-status', body=json.dumps(message))
+        print("Message published to RabbitMQ")
+        connection.close()
+
         requestBody = {
             "PaymentIntentId" : pi,
             "RefundId" : refund_obj["refundID"],
