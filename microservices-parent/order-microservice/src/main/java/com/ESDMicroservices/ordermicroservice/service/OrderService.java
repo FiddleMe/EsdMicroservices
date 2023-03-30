@@ -29,7 +29,7 @@ public class OrderService {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void placeOrder(OrderRequest orderRequest, String customerId, String Mode) {
+    public Order placeOrder(OrderRequest orderRequest, String customerId, String Mode) {
         Order order = new Order();
         order.setCustomerId(customerId);
         order.setModeOfEating(Mode);
@@ -41,7 +41,8 @@ public class OrderService {
         order.setOrderLineItemsList(orderLineItems);
         order.setInvoiceId("None");
         order.setStatus("Preorder");
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        return savedOrder;
     }
 
     private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
