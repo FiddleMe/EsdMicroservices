@@ -23,18 +23,21 @@
 						<p>Experience the flavors of Korea in every bite!</p>
 						<div class="color-border"></div>
 					</div>
-					<a href="checkout.html">
+					<a href="shoppingcart.html">
 						<button type="button" class="btn position-relative ms-5" @click="updateQty">
 							<img src="https://cdn-icons-png.flaticon.com/512/4379/4379542.png" style="height: 50px;"
-								class="d-inline-block float-end"> <span
-								class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+								class="d-inline-block float-end"> 
+								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
 								{{addedToCart.length}}
-								<span class="visually-hidden">items in cart</span> 
-							</a>
+								<span class="visually-hidden">items in cart</span>
+					</a>
 					</button>
+					<button type="button" class="btn btn-primary position-relative ms-5" onclick='document.location.href="http://localhost:3000/logout"'>Logout</button>
 				</div>
 			</div>
-			<div class="row mt-4"> <h1 class="text-center" >Recommended Food</h1> </div>
+			<div class="row mt-4">
+				<h1 class="text-center">Recommended Food</h1>
+			</div>
 			<div class="row justify-content-center">
 				<div class="col col-4 justify-content-center p-0" v-for="m in menu">
 					<div class="food-card justify-content-center mx-auto">
@@ -57,28 +60,30 @@
 			</div>
 
 
-			<div class="row mt-4"> <h1 class="text-center" >All available food</h1> </div>
-				<div class="row justify-content-center">
-					<div class="col col-4 justify-content-center p-0" v-for="m in menu">
-						<div class="food-card justify-content-center mx-auto">
-							<div class="card mx-auto">
-								<img v-bind:src="pics[m.name]" class="mx-auto pt-3" />
-								<div class="item-name">
-									{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
-										${{m.price.toFixed(2)}} </span>
-								</div>
-								<div class="descriptions">
-									<p>
-										{{m.description}}
-										{{addedToCart}}
-									</p>
-									<button class="btn btn-primary" v-bind:value="m.name" v-model="addedToCart"> Add to
-										Order </button>
-								</div>
+			<div class="row mt-4">
+				<h1 class="text-center">All available food</h1>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col col-4 justify-content-center p-0" v-for="m in menu">
+					<div class="food-card justify-content-center mx-auto">
+						<div class="card mx-auto">
+							<img v-bind:src="pics[m.name]" class="mx-auto pt-3" />
+							<div class="item-name">
+								{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
+									${{m.price.toFixed(2)}} </span>
+							</div>
+							<div class="descriptions">
+								<p>
+									{{m.description}}
+									{{addedToCart}}
+								</p>
+								<button class="btn btn-primary" v-bind:value="m.name" v-model="addedToCart"> Add to
+									Order </button>
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
 
 		</div>
 	</div>

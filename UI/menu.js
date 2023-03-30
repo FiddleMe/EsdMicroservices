@@ -30,7 +30,19 @@ const app = Vue.createApp({
         if (localStorage.getItem('orders')){
             this.qty = JSON.parse(localStorage.getItem('orders'))
             // console.log(this.qty)
-            localStorage.clear()
+            // localStorage.clear()
+            for(q in this.qty){
+                console.log(this.qty[q])
+                for(i=this.qty[q];i--;i>0){
+                    console.log("hello")
+                    this.addedToCart.push(q)
+                    // console.log(this.qty)
+                }
+            }; 
+            if(document.location.href=="http://127.0.0.1:5500/UI/menu.html"){
+                localStorage.clear()
+                this.qty={}
+            }
         }
     },
     // mounted() { 
