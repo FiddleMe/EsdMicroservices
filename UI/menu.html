@@ -24,7 +24,7 @@
 						<div class="color-border"></div>
 					</div>
 					<a href="shoppingcart.html">
-						<button type="button" class="btn position-relative ms-5" @click="updateQty">
+						<button type="button" class="btn position-relative ms-5 shopping-cart" @click="updateQty">
 							<img src="https://cdn-icons-png.flaticon.com/512/4379/4379542.png" style="height: 50px;"
 								class="d-inline-block float-end"> 
 								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -42,7 +42,7 @@
 				<div class="col col-4 justify-content-center p-0" v-for="m in menu">
 					<div class="food-card justify-content-center mx-auto">
 						<div class="card mx-auto">
-							<img v-bind:src="pics[m.name]" class="mx-auto pt-3" />
+							<img v-bind:src="pics[m.name]" class="mx-auto pt-3 item img" />
 							<div class="item-name">
 								{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
 									${{m.price.toFixed(2)}} </span>
@@ -51,7 +51,7 @@
 								<p>
 									{{m.description}}
 								</p>
-								<button class="btn btn-primary" @click="addToCart(m.name)"> Add to
+								<button class="btn btn-primary" @click="addToCart(m.name)" onclick="fly()"> Add to
 									Order </button>
 							</div>
 						</div>
