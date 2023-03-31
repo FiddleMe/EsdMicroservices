@@ -32,3 +32,8 @@ services:
     build: ./product-service
     ports:
       - 8080:8080
+  invoice-service:
+    container_name: invoice-microservice
+    build: ./invoice-microservice
+    ports:
+      - 5000:5000

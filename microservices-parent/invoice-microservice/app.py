@@ -1,7 +1,6 @@
 from flask import Flask, request
 from flask_pymongo import pymongo
-from pymongo import MongoClient
-import requests
+
 
 app = Flask(__name__)
 # app.config["MONGO_URI"] = "mongodb+srv://esdgroup5:atnOGttsAp9VxC4f@esdmenu.6j7pwgr.mongodb.net/?retryWrites=true&w=majority"
@@ -97,18 +96,20 @@ def refund_bill():
         return {"status": 500, "error": str(e)}
 
 # update specific field
+
+
 @app.route("/updateField", methods=['PUT'])
 def update_field():
     updates = request.get_json()
     print(updates)
     if "InvoiceId" in updates.keys():
-        key_dict = {"InvoiceId" : updates["InvoiceId"]}
+        key_dict = {"InvoiceId": updates["InvoiceId"]}
         print(key_dict)
     elif "SessionId" in updates.keys():
-        key_dict = {"SessionId" : updates["SessionId"]}
+        key_dict = {"SessionId": updates["SessionId"]}
         print(key_dict)
     else:
-        key_dict = {"PaymentIntentId" : updates["PaymentIntentId"]}
+        key_dict = {"PaymentIntentId": updates["PaymentIntentId"]}
     payload = {}
     for [key, value] in updates.items():
         if key != "InvoiceId" or key != "SessionId":
@@ -131,18 +132,20 @@ def update_field():
         #     return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
         return {"status": 500, "error": str(e)}
-    
+
 # search invoices collection for specific data using either InvoiceId, PaymentIntentId, SessionId, RefundId (anything unique)
+
+
 @app.route("/search", methods=['GET'])
 def search():
     updates = request.get_json()
     query_dict = {}
     updates = list(updates.items())[0]
-    query_dict = {updates[0] : updates[1]}
+    query_dict = {updates[0]: updates[1]}
     try:
         response = db.invoices.find_one(query_dict)
         if (response):
-            return {"status": 200, "data" : response}
+            return {"status": 200, "data": response}
         else:
             return {"status": 400, "error": "Failed to find invoice data in database"}
     except Exception as e:
