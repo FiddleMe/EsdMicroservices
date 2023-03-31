@@ -1,7 +1,8 @@
 function fly(){
         console.log("hello")
       const cart = document.querySelector('.shopping-cart');
-      const img = this.parentNode.parentNode.querySelector('.item img');
+      console.log(cart)
+      const img = this.parentElement
       console.log(img)
   
       if (img) {
@@ -57,7 +58,8 @@ const app = Vue.createApp({
             "Bulgogi Kimbap": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToV4srjn50TiTZP9zZqVD3ptkmod280qa8Yw&usqp=CAU"},
             addedToCart: [],
             qty: {},
-            recommended: []
+            recommendedFoods: [],
+            recoDetails: []
             // total: 0
         };
     }, // data
@@ -77,8 +79,15 @@ const app = Vue.createApp({
             });
         axios.get('http://127.0.0.1:5010/analytics/top_menu_items')
             .then(response => {
-                this.recommended = response.data.data
-                console.log(this.recommended)
+                this.recommendedFoods = response.data.data
+                this.recommendedFoods.forEach(f=>{
+                    this.menu.forEach(m=>{
+                        if (m.name==f){
+                            this.recoDetails.push(m)
+                        }
+                    })
+                })
+                console.log(this.recoDetails)
             })
             .catch( error => {
                 console.log(error.message);
@@ -134,6 +143,10 @@ const app = Vue.createApp({
                 total+= this.getPrice(x)*this.qty[x]
             }
             return total
+        },
+        flyy(name){
+            console.log("in flyy")
+            fly()
         }
         }
     } // methods

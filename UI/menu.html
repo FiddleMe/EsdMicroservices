@@ -39,19 +39,20 @@
 				<h1 class="text-center">Recommended Food</h1>
 			</div>
 			<div class="row justify-content-center">
-				<div class="col col-4 justify-content-center p-0" v-for="m in menu">
+				<div class="col col-4 justify-content-center p-0" v-for="r in recoDetails">
 					<div class="food-card justify-content-center mx-auto">
-						<div class="card mx-auto">
-							<img v-bind:src="pics[m.name]" class="mx-auto pt-3 item img" />
+						<div class="card mx-auto" :id="'r'+r.name">
+							<img v-bind:src="pics[r.name]" class="mx-auto pt-3 item img" />
 							<div class="item-name">
-								{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
-									${{m.price.toFixed(2)}} </span>
+								{{r.name}}
+								<span class="badge text-bg-warning float-end me-3 d-inline-block"> ${{r.price.toFixed(2)}}
+								</span>
 							</div>
 							<div class="descriptions">
 								<p>
-									{{m.description}}
+									{{r.description}}
 								</p>
-								<button class="btn btn-primary" @click="addToCart(m.name)" onclick="fly()"> Add to
+								<button class="btn btn-primary" @click="addToCart(r.name)" @click="flyy(r.name)"> Add to
 									Order </button>
 							</div>
 						</div>
