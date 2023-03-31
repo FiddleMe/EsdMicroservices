@@ -37,3 +37,11 @@ services:
     build: ./invoice-microservice
     ports:
       - 5000:5000
+  feedback-service:
+    container_name: feedback-microservice
+    build: ./feedback-microservice
+    ports:
+      - 5001:5001
+    depends_on:
+      - mysqldb
+    restart: always

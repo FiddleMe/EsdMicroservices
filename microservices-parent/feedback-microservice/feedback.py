@@ -4,11 +4,13 @@ from flask_cors import CORS
 from os import environ
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("dbURL")
+# app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("dbURL")
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root:root@mysqldb:3306/feedback"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 CORS(app)
+
 
 class Feedback(db.Model):
     __tablename__ = "feedback"
@@ -18,7 +20,7 @@ class Feedback(db.Model):
     contactNo = db.Column(db.Integer)
     description = db.Column(db.String(255), nullable=False)
 
-    def __init__ (self, feedbackID, dateTime, contactNo, description):
+    def __init__(self, feedbackID, dateTime, contactNo, description):
         self.feedbackID = feedbackID
         self.dateTime = dateTime
         self.contactNo = contactNo
@@ -27,7 +29,7 @@ class Feedback(db.Model):
     def json(self):
         return {"feedbackID": self.feedbackID, "dateTime": self.dateTime,
                 "contactNo": self.contactNo, "description": self.description}
-    
+
 
 @app.route("/feedback")
 def get_all_feedback():
@@ -48,6 +50,7 @@ def get_all_feedback():
         }
     )
 
+
 @app.route("/feedback/<int:feedbackID>")
 def find_by_feedbackID(feedbackID):
     feedback = Feedback.query.filter_by(feedbackID=feedbackID).first()
@@ -65,6 +68,6 @@ def find_by_feedbackID(feedbackID):
         }
     )
 
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5001, debug=True)
-
