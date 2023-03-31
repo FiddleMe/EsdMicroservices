@@ -27,3 +27,8 @@ services:
     environment:
       - MYSQL_DATABASE=order
       - MYSQL_ROOT_PASSWORD=root
+  product-service:
+    container_name: product-service
+    build: ./product-service
+    ports:
+      - 8080:8080
