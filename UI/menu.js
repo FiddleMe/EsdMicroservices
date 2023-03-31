@@ -77,8 +77,8 @@ const app = Vue.createApp({
             });
         axios.get('http://127.0.0.1:5010/analytics/top_menu_items')
             .then(response => {
-                this.recommended = 
-                console.log(this.menu)
+                this.recommended = response.data.data
+                console.log(this.recommended)
             })
             .catch( error => {
                 console.log(error.message);
