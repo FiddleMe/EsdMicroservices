@@ -77,7 +77,8 @@ def requestInvoice():
             print("-------\n")
             print("result")
             print(invoice)
-            return jsonify(invoice)
+            session = createSession(invoice["body"])
+            return session
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -163,9 +164,8 @@ def processInvoice(orderId):
 # create checkout session, return session id
 
 
-@app.route("/checkoutSession", methods=['POST'])
-def createSession():
-    order = request.get_json()
+# @app.route("/checkoutSession", methods=['POST'])
+def createSession(order):
     totalPrice = int(order['TotalPrice']) * 100
     InvoiceId = order['InvoiceId']
     requestBody = {
