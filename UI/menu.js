@@ -1,3 +1,50 @@
+function fly(){
+        console.log("hello")
+      const cart = document.querySelector('.shopping-cart');
+      const img = this.parentNode.parentNode.querySelector('.item img');
+      console.log(img)
+  
+      if (img) {
+        const imgClone = img.cloneNode();
+        imgClone.style.opacity = '0.5';
+        imgClone.style.position = 'absolute';
+        imgClone.style.height = '150px';
+        imgClone.style.width = '150px';
+        imgClone.style.zIndex = '100';
+        document.body.appendChild(imgClone);
+  
+        const imgRect = img.getBoundingClientRect();
+        const cartRect = cart.getBoundingClientRect();
+        const startX = imgRect.left + (imgRect.width / 2);
+        const startY = imgRect.top + (imgRect.height / 2);
+        const endX = cartRect.left + (cartRect.width / 2);
+        const endY = cartRect.top + (cartRect.height / 2);
+        let x = startX;
+        let y = startY;
+        let width = imgRect.width;
+        let height = imgRect.height;
+  
+        const intervalId = setInterval(function() {
+          if (x < endX) x += 10;
+          if (y < endY) y += 10;
+          if (width > 75) width -= 5;
+          if (height > 75) height -= 5;
+          imgClone.style.left = x + 'px';
+          imgClone.style.top = y + 'px';
+          imgClone.style.width = width + 'px';
+          imgClone.style.height = height + 'px';
+          if (x >= endX && y >= endY && width <= 75 && height <= 75) {
+            clearInterval(intervalId);
+            document.body.removeChild(imgClone);
+            cart.classList.add('shake');
+            setTimeout(function() {
+              cart.classList.remove('shake');
+            }, 200);
+          }
+        }, 10);
+      }
+    }
+  
 // <div id='app'></div>
 const app = Vue.createApp({ 
     data() { 
@@ -10,6 +57,7 @@ const app = Vue.createApp({
             "Bulgogi Kimbap": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToV4srjn50TiTZP9zZqVD3ptkmod280qa8Yw&usqp=CAU"},
             addedToCart: [],
             qty: {},
+            recommended: []
             // total: 0
         };
     }, // data
@@ -27,10 +75,30 @@ const app = Vue.createApp({
             .catch( error => {
                 console.log(error.message);
             });
+        axios.get('http://127.0.0.1:5010/analytics/top_menu_items')
+            .then(response => {
+                this.recommended = 
+                console.log(this.menu)
+            })
+            .catch( error => {
+                console.log(error.message);
+            });
         if (localStorage.getItem('orders')){
             this.qty = JSON.parse(localStorage.getItem('orders'))
             // console.log(this.qty)
-            localStorage.clear()
+            // localStorage.clear()
+            for(q in this.qty){
+                console.log(this.qty[q])
+                for(i=this.qty[q];i--;i>0){
+                    console.log("hello")
+                    this.addedToCart.push(q)
+                    // console.log(this.qty)
+                }
+            }; 
+            if(document.location.href=="http://127.0.0.1:5500/UI/menu.html"){
+                localStorage.clear()
+                this.qty={}
+            }
         }
     },
     // mounted() { 

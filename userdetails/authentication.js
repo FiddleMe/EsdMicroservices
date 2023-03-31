@@ -18,7 +18,7 @@ app.use(auth(config));
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
     if (req.oidc.isAuthenticated()){
-        res.send('Logged in - *display content here* ');
+        res.redirect('http://127.0.0.1:5500/UI/menu.html');
     }
     else{
         res.send('Logged out');

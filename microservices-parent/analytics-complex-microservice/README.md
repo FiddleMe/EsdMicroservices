@@ -87,14 +87,13 @@ returns percentages of positive and negative feedback in json format
 returns top 5 menu items based on total orders in json format
 {
   "code": 200,
-  "data": {
-    "jangmeyon": 4,
-    "tteakbokki": 3,
-    "chicken": 3,
-    "beef": 2,
-    "kimchi": 1,
-
-  }
+  "data": [
+    "jangmeyon",
+    "tteakbokki",
+    "chicken",
+    "beef",
+    "kimchi",
+  ]
 }
 
 127.0.0.1:5010/analytics/mode_of_eating, method='GET'
