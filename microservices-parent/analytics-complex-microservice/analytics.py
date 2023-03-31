@@ -58,7 +58,7 @@ def return_pos_vs_neg():
 
 @app.route("/analytics/top_menu_items")
 def top_menu_items():
-    orders_list = invoke_http(order_url, method='GET')
+    orders_list = invoke_http(order_url, method='GET')["orders"]
     # orders_list = [
     #     {
     #         "orderLineItemsList": [
@@ -124,7 +124,7 @@ def top_menu_items():
     
 @app.route("/analytics/mode_of_eating")
 def preferred_mode_of_eating():
-    orders_list = invoke_http(order_url, method='GET')
+    orders_list = invoke_http(order_url, method='GET')["orders"]
     #next two lines are entirely speculative - order microservice idk how to use
     # Note: the data below is entirely test data. This is strictly temporary.
     # orders_list = [
