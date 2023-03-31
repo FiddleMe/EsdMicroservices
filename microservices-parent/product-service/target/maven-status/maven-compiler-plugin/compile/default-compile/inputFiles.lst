@@ -1,0 +1,7 @@
+/Users/bryen/Documents/GitHub/EsdMicroservices/microservices-parent/product-service/src/main/java/com/ProductMicroservice/productservice/controller/ProductController.java
+/Users/bryen/Documents/GitHub/EsdMicroservices/microservices-parent/product-service/src/main/java/com/ProductMicroservice/productservice/dto/ProductRequest.java
+/Users/bryen/Documents/GitHub/EsdMicroservices/microservices-parent/product-service/src/main/java/com/ProductMicroservice/productservice/repository/ProductRepository.java
+/Users/bryen/Documents/GitHub/EsdMicroservices/microservices-parent/product-service/src/main/java/com/ProductMicroservice/productservice/model/Product.java
+/Users/bryen/Documents/GitHub/EsdMicroservices/microservices-parent/product-service/src/main/java/com/ProductMicroservice/productservice/service/ProductService.java
+/Users/bryen/Documents/GitHub/EsdMicroservices/microservices-parent/product-service/src/main/java/com/ProductMicroservice/productservice/dto/ProductResponse.java
+/Users/bryen/Documents/GitHub/EsdMicroservices/microservices-parent/product-service/src/main/java/com/ProductMicroservice/productservice/ProductServiceApplication.java
