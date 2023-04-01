@@ -30,7 +30,7 @@ stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0
 # error_URL = "http://localhost:5004/error"
 app = Flask(__name__)
 CORS(app)
-hostname = 'localhost'
+hostname = 'rabbit_pika'
 port = 5672
 queue_name = 'update-status'
 
