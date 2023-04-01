@@ -17,7 +17,7 @@
 			<div class="row">
 				<div class="banner justify-content-center mx-auto p-0 mt-5">
 					<div class="hero">
-						<h1> Logo / Name</h1>
+						<h1> My Korea </h1>
 					</div>
 					<div class="sub-content ms-5">
 						<p>Experience the flavors of Korea in every bite!</p>
@@ -67,9 +67,9 @@
 			</div>
 			<div class="row justify-content-center">
 				<div class="col col-4 justify-content-center p-0" v-for="m in menu">
-					<div class="food-card justify-content-center mx-auto">
+					<div class="food-card justify-content-center mx-auto" :id="'m'+m.name">
 						<div class="card mx-auto">
-							<img v-bind:src="pics[m.name]" class="mx-auto pt-3" />
+							<img v-bind:src="pics[m.name]" class="item-img mx-auto pt-3" />
 							<div class="item-name p-3">
 								<img src="https://cdn-icons-png.flaticon.com/512/5976/5976911.png" alt="" v-show="recommended.includes(m.name)" style="width: 25px; height: 25px;">
 								{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
@@ -80,7 +80,7 @@
 								<p>
 									{{m.description}}
 								</p>
-								<button class="btn btn-primary" @click="addToCart(m.name)" onclick="fly()"> Add to
+								<button class="btn btn-primary" @click="addToCart(m.name)"> Add to
 									Order </button>
 							</div>
 						</div>

@@ -1,6 +1,9 @@
-function fly() {
+function fly(r) {
+    let id = '#'+r
+   var block = document.querySelector(id)
   const cart = document.querySelector(".shopping-cart");
-  const img = this.parentNode.parentNode.querySelector(".item img");
+  const img = block.querySelector(".item-img");
+  console.log(img)
 
   if (img) {
     const imgClone = img.cloneNode();
@@ -156,6 +159,7 @@ const app = Vue.createApp(
         this.addedToCart.push(x);
         // console.log(this.addedToCart)
         // localStorage.setItem('orders',JSON.stringify(this.qty))
+        fly('m'+x )
       },
       getPrice(o) {
         for (m of this.menu) {
