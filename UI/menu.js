@@ -1,9 +1,9 @@
 function fly(r) {
-    let id = '#'+r
-   var block = document.querySelector(id)
+  let id = "#" + r;
+  var block = document.querySelector(id);
   const cart = document.querySelector(".shopping-cart");
   const img = block.querySelector(".item-img");
-  console.log(img)
+  console.log(img);
 
   if (img) {
     const imgClone = img.cloneNode();
@@ -67,7 +67,7 @@ const app = Vue.createApp(
         addedToCart: [],
         qty: {},
         recommended: [],
-        recoDetails: []
+        recoDetails: [],
         // total: 0
       };
     }, // data
@@ -77,8 +77,9 @@ const app = Vue.createApp(
     //     }
     // }, // computed
     created() {
-        console.log(localStorage.getItem('idk'))
-        // console.log(localStorage.getItem('axios/placeorder'))
+      console.log(localStorage.getItem("yes"));
+      console.log(localStorage.getItem("no"));
+      // console.log(localStorage.getItem('axios/placeorder'))
       axios
         .get("http://localhost:8080/api/product")
         .then((response) => {
@@ -90,12 +91,12 @@ const app = Vue.createApp(
       axios
         .get("http://localhost:5010/analytics/top_menu_items")
         .then((response) => {
-          this.recommended = response.data.data
-          response.data.data.forEach(r => {
-            this.menu.forEach(m => {
-                if (r==m.name){
-                    this.recoDetails.push(m)
-                }
+          this.recommended = response.data.data;
+          response.data.data.forEach((r) => {
+            this.menu.forEach((m) => {
+              if (r == m.name) {
+                this.recoDetails.push(m);
+              }
             });
           });
           console.log(this.recoDetails);
@@ -105,12 +106,11 @@ const app = Vue.createApp(
         });
       if (localStorage.getItem("orders")) {
         this.qty = JSON.parse(localStorage.getItem("orders"));
-        console.log(this.qty)
-        
+        console.log(this.qty);
+
         for (q in this.qty) {
           for (i = this.qty[q]; i--; i > 0) {
             this.addedToCart.push(q);
-        
           }
         }
         if (document.location.href == "http://127.0.0.1:5500/UI/menu.html") {
@@ -123,34 +123,61 @@ const app = Vue.createApp(
     // },
     methods: {
       handleCheckout() {
-        this.continueShopping()
-        var orderss = []
+        this.continueShopping();
+        var orderss = [];
         for (q in this.qty) {
-            console.log(q)
-            order = {'product_name':q,'quantity':this.qty[q]}
-            orderss.push(order)
+          console.log(q);
+          order = { product_name: q, quantity: this.qty[q] };
+          orderss.push(order);
+        }
+        var args = {
+          orderLineItemsDtoList: orderss,
+          customerId: 1134,
+          Mode: "eatinghere",
         };
-        var args = {"orderLineItemsDtoList":orderss,'customerId':1134,'Mode':'eatinghere'}
-        
-        axios.post('http://127.0.0.1:5100/place_order', JSON.stringify(args), {headers: {'Content-Type': 'application/json'}})
-            .then(response => {
-                // localStorage.setItem('axios/placeorder', JSON.stringify(response.data))
-                var placeOrderId = response.data.data.order.orderId;
-                // localStorage.setItem('axios/placeorder', placeOrderId)
-                console.log(response.data.data.order.orderId)
-                axios.post('http://127.0.0.1:5100/requestInvoice', JSON.stringify({'orderId':placeOrderId}), {headers: {'Content-Type': 'application/json'}})
-                    .then(response => {
-                        console.log(response.data);
-                        localStorage.setItem('idk',response.data)
-                    })
-                    .catch( error => {
-                        console.log(error.message);
-                        localStorage.setItem('idk',error.message)
-                    });
-            })
-            .catch( error => {
+
+        axios
+          .post("http://127.0.0.1:5100/place_order", JSON.stringify(args), {
+            headers: { "Content-Type": "application/json" },
+          })
+          .then((response) => {
+            // localStorage.setItem('axios/placeorder', JSON.stringify(response.data))
+            var placeOrderId = response.data.data.order.orderId;
+            // localStorage.setItem('axios/placeorder', placeOrderId)
+            console.log(response.data.data.order.orderId);
+            axios
+              .post(
+                "http://127.0.0.1:5100/requestInvoice",
+                JSON.stringify({ orderId: placeOrderId }),
+                { headers: { "Content-Type": "application/json" } }
+              )
+              .then((response) => {
+                console.log("in axios");
+                console.log(response.data);
+                localStorage.setItem("yes", response.data);
+                axios
+                  .post("http://127.0.0.1:4242/create-checkout-session", {
+                    TotalPrice: this.total() * 100, // Replace with your desired total price
+                  })
+                  .then((response) => {
+                    // Handle success response
+                    console.log(response);
+                    window.location.href = response.data.url;
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    // Handle error
+                  });
+              })
+              .catch((error) => {
+                console.log("in axios");
                 console.log(error.message);
-            });
+                localStorage.setItem("no", error.message);
+              });
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
 
         // axios
         //   .post("http://127.0.0.1:4242/create-checkout-session", {
@@ -166,14 +193,14 @@ const app = Vue.createApp(
         //     // Handle error
         //   });
       },
-      continueShopping(){
+      continueShopping() {
         for (q in this.qty) {
-            console.log(q)
-            if(this.qty[q]==0){
-                delete this.qty[q]
-            }
-        };
-        localStorage.setItem("orders", JSON.stringify(this.qty))
+          console.log(q);
+          if (this.qty[q] == 0) {
+            delete this.qty[q];
+          }
+        }
+        localStorage.setItem("orders", JSON.stringify(this.qty));
         // console.log(localStorage.getItem("orders"))
       },
       updateQty() {
@@ -190,7 +217,7 @@ const app = Vue.createApp(
         this.addedToCart.push(x);
         // console.log(this.addedToCart)
         // localStorage.setItem('orders',JSON.stringify(this.qty))
-        fly('m'+x )
+        fly("m" + x);
       },
       getPrice(o) {
         for (m of this.menu) {
