@@ -77,6 +77,8 @@ const app = Vue.createApp(
     //     }
     // }, // computed
     created() {
+        console.log(localStorage.getItem('idk'))
+        console.log(localStorage.getItem('axios/placeorder'))
       axios
         .get("http://localhost:8080/api/product")
         .then((response) => {
@@ -129,10 +131,20 @@ const app = Vue.createApp(
             orderss.push(order)
         };
         var args = {"orderLineItemsDtoList":orderss,'customerId':1134,'Mode':'eatinghere'}
-
+        
         axios.post('http://127.0.0.1:5100/place_order', JSON.stringify(args), {headers: {'Content-Type': 'application/json'}})
             .then(response => {
-                console.log(response.data);
+                localStorage.setItem('axios/placeorder', JSON.stringify(response.data))
+                var placeOrderId = response.data.data.order.orderId;
+                axios.post('http://127:0.0.1:5100/requestInvoice', JSON.stringify({'orderId':placeOrderId}), {headers: {'Content-Type': 'application/json'}})
+                    .then(response => {
+                        console.log(response.data);
+                        localStorage.setItem('idk',response.data)
+                    })
+                    .catch( error => {
+                        console.log(error.message);
+                        localStorage.setItem('idk',error.message)
+                    });
             })
             .catch( error => {
                 console.log(error.message);
