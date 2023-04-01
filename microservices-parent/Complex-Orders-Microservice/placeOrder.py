@@ -9,9 +9,9 @@ import stripe
 from invokes import invoke_http
 
 # book_URL = "http://localhost:5000/book"
-order_URL = "http://localhost:8081/api/order"
-get_order_URL = "http://localhost:8081/api/order/findOrderById"
-menu_url = "http://localhost:8080/api/product"
+order_URL = "http://order-service:8081/api/order"
+get_order_URL = "http://order-service:8081/api/order/findOrderById"
+menu_url = "http://product-service:8080/api/product"
 create_invoice_url = "http://localhost:5000/calculate-bill"
 
 create_checkout_url = "http://127.0.0.1:4242/create-checkout-session"
@@ -21,9 +21,9 @@ payment_status_url = "http://127.0.0.1:4242/paymentStatus"
 refund_url = "http://127.0.0.1:4242/refund"
 # pass in refundID at the back
 refund_status_url = "http://127.0.0.1:4242/refundStatus"
-update_field_url = "http://127.0.0.1:5000/updateField"
+update_field_url = "http://invoice-service:5000/updateField"
 # pass in any unique id to find data from invoices collection
-search_url = "http://127.0.0.1:5000/search"
+search_url = "http://invoice-service:5000/search"
 stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0cTCPZUGCEFPAUXo59zcLa0EMK7CoCSY11LE00JZafQOs4'
 
 # activity_log_URL = "http://localhost:5003/activity_log"
@@ -77,7 +77,8 @@ def requestInvoice():
             print("-------\n")
             print("result")
             print(invoice)
-            return jsonify(invoice)
+            session = createSession(invoice["body"])
+            return session
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -163,9 +164,8 @@ def processInvoice(orderId):
 # create checkout session, return session id
 
 
-@app.route("/checkoutSession", methods=['POST'])
-def createSession():
-    order = request.get_json()
+# @app.route("/checkoutSession", methods=['POST'])
+def createSession(order):
     totalPrice = int(order['TotalPrice']) * 100
     InvoiceId = order['InvoiceId']
     requestBody = {
