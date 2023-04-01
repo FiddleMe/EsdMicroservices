@@ -121,19 +121,36 @@ const app = Vue.createApp(
     // },
     methods: {
       handleCheckout() {
-        axios
-          .post("http://127.0.0.1:4242/create-checkout-session", {
-            TotalPrice: this.total() * 100, // Replace with your desired total price
-          })
-          .then((response) => {
-            // Handle success response
-            console.log(response)
-            window.location.href = response.data.url;
-          })
-          .catch((error) => {
-            console.log(error);
-            // Handle error
-          });
+        this.continueShopping()
+        var orderss = []
+        for (q in this.qty) {
+            console.log(q)
+            order = {'product_name':q,'quantity':this.qty[q]}
+            orderss.push(order)
+        };
+        var args = {"orderLineItemsDtoList":orderss,'customerId':1134,'Mode':'eatinghere'}
+
+        axios.post('http://127.0.0.1:5100/place_order', JSON.stringify(args), {headers: {'Content-Type': 'application/json'}})
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch( error => {
+                console.log(error.message);
+            });
+
+        // axios
+        //   .post("http://127.0.0.1:4242/create-checkout-session", {
+        //     TotalPrice: this.total() * 100, // Replace with your desired total price
+        //   })
+        //   .then((response) => {
+        //     // Handle success response
+        //     console.log(response)
+        //     window.location.href = response.data.url;
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //     // Handle error
+        //   });
       },
       continueShopping(){
         for (q in this.qty) {
