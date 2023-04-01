@@ -7,3 +7,4 @@ microservices-parent/Complex-Orders-Microservice/complex
 microservices-parent/analytics-complex-microservice/env
 microservices-parent/feedback-microservice/env
 microservices-parent/microservices-parent/mysql_data
+microservices-parent/microservices-parent/mysql_data/
