@@ -63,7 +63,8 @@ const app = Vue.createApp(
         },
         addedToCart: [],
         qty: {},
-        recommended: [],
+        // recommended: [],
+        recoDetails: []
         // total: 0
       };
     }, // data
@@ -84,7 +85,15 @@ const app = Vue.createApp(
       axios
         .get("http://localhost:5010/analytics/top_menu_items")
         .then((response) => {
-          this.recommended = console.log(this.menu);
+        //   this.recommended = response.data.data
+          response.data.data.forEach(r => {
+            this.menu.forEach(m => {
+                if (r==m.name){
+                    this.recoDetails.push(m)
+                }
+            });
+          });
+          console.log(this.recoDetails);
         })
         .catch((error) => {
           console.log(error.message);
