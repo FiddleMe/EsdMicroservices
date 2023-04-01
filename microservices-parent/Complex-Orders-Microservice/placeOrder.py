@@ -12,15 +12,15 @@ from invokes import invoke_http
 order_URL = "http://order-service:8081/api/order"
 get_order_URL = "http://order-service:8081/api/order/findOrderById"
 menu_url = "http://product-service:8080/api/product"
-create_invoice_url = "http://localhost:5000/calculate-bill"
+create_invoice_url = "http://invoice-service:5000/calculate-bill"
 
-create_checkout_url = "http://127.0.0.1:4242/create-checkout-session"
+create_checkout_url = "http://payment-microservice:4242/create-checkout-session"
 # pass in session_id at the back
-payment_status_url = "http://127.0.0.1:4242/paymentStatus"
+payment_status_url = "http://payment-microservice:4242/paymentStatus"
 # pass in payment_intent at the back
-refund_url = "http://127.0.0.1:4242/refund"
+refund_url = "http://payment-microservice:4242/refund"
 # pass in refundID at the back
-refund_status_url = "http://127.0.0.1:4242/refundStatus"
+refund_status_url = "http://payment-microservice:4242/refundStatus"
 update_field_url = "http://invoice-service:5000/updateField"
 # pass in any unique id to find data from invoices collection
 search_url = "http://invoice-service:5000/search"
@@ -30,7 +30,7 @@ stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0
 # error_URL = "http://localhost:5004/error"
 app = Flask(__name__)
 CORS(app)
-hostname = 'localhost'
+hostname = 'rabbit_pika'
 port = 5672
 queue_name = 'update-status'
 
