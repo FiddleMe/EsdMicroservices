@@ -189,7 +189,7 @@ def createSession(order):
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "There seem to be an error creating payment session"}
+        return {"status": 500, "error": "There seem to be an error creating payment session." + str(e)}
 
 # after payment, update payment intent. pass in session_id, this is automated
 
