@@ -12,7 +12,7 @@ from invokes import invoke_http
 order_URL = "http://order-service:8081/api/order"
 get_order_URL = "http://order-service:8081/api/order/findOrderById"
 menu_url = "http://product-service:8080/api/product"
-create_invoice_url = "http://localhost:5000/calculate-bill"
+create_invoice_url = "http://invoice-service:5000/calculate-bill"
 
 create_checkout_url = "http://payment-microservice:4242/create-checkout-session"
 # pass in session_id at the back
