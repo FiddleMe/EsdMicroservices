@@ -17,12 +17,12 @@
   </head>
   <body>
     <div id="app" class="wrap cf">
-      <h1 class="projTitle">
+      <!-- <h1 class="projTitle">
         Responsive Table<span>-Less</span> Shopping Cart
-      </h1>
+      </h1> -->
       <div class="heading cf">
-        <h1>My Cart</h1>
-        <a href="/menu" class="continue">Continue Shopping</a>
+        <h1>My Cart </h1>
+        <a href="menu.html" class="continue" @click="continueShopping" >Continue Shopping</a>
       </div>
       <div class="cart">
         <!--    <ul class="tableHead">
@@ -33,7 +33,7 @@
           </ul>-->
         <ul class="cartWrap">
           <li class="items odd" v-for="(c,idx) in qty">
-            <div class="infoWrap align-items-center">
+            <div class="infoWrap align-items-center" v-show="qty[idx]>0">
               <div class="cartSection">
                 <img :src="pics[idx]" alt="" class="itemImg" />
                 <p class="itemNumber"></p>

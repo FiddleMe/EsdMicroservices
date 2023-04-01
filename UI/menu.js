@@ -1,6 +1,9 @@
-function fly() {
+function fly(r) {
+    let id = '#'+r
+   var block = document.querySelector(id)
   const cart = document.querySelector(".shopping-cart");
-  const img = this.parentNode.parentNode.querySelector(".item img");
+  const img = block.querySelector(".item-img");
+  console.log(img)
 
   if (img) {
     const imgClone = img.cloneNode();
@@ -63,7 +66,7 @@ const app = Vue.createApp(
         },
         addedToCart: [],
         qty: {},
-        // recommended: [],
+        recommended: [],
         recoDetails: []
         // total: 0
       };
@@ -85,7 +88,7 @@ const app = Vue.createApp(
       axios
         .get("http://localhost:5010/analytics/top_menu_items")
         .then((response) => {
-        //   this.recommended = response.data.data
+          this.recommended = response.data.data
           response.data.data.forEach(r => {
             this.menu.forEach(m => {
                 if (r==m.name){
@@ -100,6 +103,7 @@ const app = Vue.createApp(
         });
       if (localStorage.getItem("orders")) {
         this.qty = JSON.parse(localStorage.getItem("orders"));
+        console.log(this.qty)
         
         for (q in this.qty) {
           for (i = this.qty[q]; i--; i > 0) {
@@ -131,6 +135,16 @@ const app = Vue.createApp(
             // Handle error
           });
       },
+      continueShopping(){
+        for (q in this.qty) {
+            console.log(q)
+            if(this.qty[q]==0){
+                delete this.qty[q]
+            }
+        };
+        localStorage.setItem("orders", JSON.stringify(this.qty))
+        // console.log(localStorage.getItem("orders"))
+      },
       updateQty() {
         this.addedToCart.forEach((c) => {
           if (!this.qty[c]) {
@@ -145,6 +159,7 @@ const app = Vue.createApp(
         this.addedToCart.push(x);
         // console.log(this.addedToCart)
         // localStorage.setItem('orders',JSON.stringify(this.qty))
+        fly('m'+x )
       },
       getPrice(o) {
         for (m of this.menu) {
