@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+ 
+}
+
+#feedbackChart {
+ width: 500px;
+  height: 400px;
+  margin: 80px
+
+}
+
+#modeOfEatingChart {
+  width: 500px;
+  height: 400px;
+  margin: 80px;
+}
+
+.chart-row {
+  display: flex;
+  justify-content: center;
+  margin: 20px 180px;
+}
+
+
+.canvasjs-chart-credit {
+  opacity: 0 !important;
+}

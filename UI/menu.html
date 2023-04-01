@@ -23,7 +23,7 @@
 						<p>Experience the flavors of Korea in every bite!</p>
 						<div class="color-border"></div>
 					</div>
-					<a href="shoppingcart.html">
+					<a href="/shoppingcart">
 						<button type="button" class="btn position-relative ms-5 shopping-cart" @click="updateQty">
 							<img src="https://cdn-icons-png.flaticon.com/512/4379/4379542.png" style="height: 50px;"
 								class="d-inline-block float-end"> 
@@ -39,20 +39,19 @@
 				<h1 class="text-center">Recommended Food</h1>
 			</div>
 			<div class="row justify-content-center">
-				<div class="col col-4 justify-content-center p-0" v-for="r in recoDetails">
+				<div class="col col-4 justify-content-center p-0" v-for="m in menu">
 					<div class="food-card justify-content-center mx-auto">
-						<div class="card mx-auto" :id="'r'+r.name">
-							<img v-bind:src="pics[r.name]" class="mx-auto pt-3 item img" />
+						<div class="card mx-auto">
+							<img v-bind:src="pics[m.name]" class="mx-auto pt-3 item img" />
 							<div class="item-name">
-								{{r.name}}
-								<span class="badge text-bg-warning float-end me-3 d-inline-block"> ${{r.price.toFixed(2)}}
-								</span>
+								{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
+									${{m.price.toFixed(2)}} </span>
 							</div>
 							<div class="descriptions">
 								<p>
-									{{r.description}}
+									{{m.description}}
 								</p>
-								<button class="btn btn-primary" @click="addToCart(r.name)" @click="flyy(r.name)"> Add to
+								<button class="btn btn-primary" @click="addToCart(m.name)" onclick="fly()"> Add to
 									Order </button>
 							</div>
 						</div>
@@ -76,9 +75,8 @@
 							<div class="descriptions">
 								<p>
 									{{m.description}}
-									{{addedToCart}}
 								</p>
-								<button class="btn btn-primary" v-bind:value="m.name" v-model="addedToCart"> Add to
+								<button class="btn btn-primary" @click="addToCart(m.name)" onclick="fly()"> Add to
 									Order </button>
 							</div>
 						</div>
@@ -87,8 +85,6 @@
 			</div>
 
 		</div>
-	</div>
-
 	</div>
 	<!-- Vue 3 -->
 	<script src='https://cdn.jsdelivr.net/npm/vue@next'></script>
