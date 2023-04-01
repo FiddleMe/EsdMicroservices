@@ -18,7 +18,7 @@ var recipient, status_msg;
 connectQueue() // call connectQueue function
 async function connectQueue() {
     try {
-        connection = await amqp.connect("amqp://rabbitmq:5672/", "heartbeat=3600", "blocked_connection_timeout=3600");
+        connection = await amqp.connect("amqp://rabbit_pika:5672/", "heartbeat=3600", "blocked_connection_timeout=3600");
         channel = await connection.createChannel()
         // connect to 'update-status', create one if doesnot exist already
         await channel.assertQueue("update-status")

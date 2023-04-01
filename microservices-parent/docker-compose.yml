@@ -58,7 +58,15 @@ services:
       - order-service
       - invoice-service
       - product-service
-
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: rabbitmq
+  #   hostname: rabbitmq
+  #   ports:
+  #     - 15672:15672
+  #     - 5672:5672
+  #   networks:
+  #     - notification_network
   rabbit:
     container_name: rabbit_pika
     image: rabbitmq:3-management-alpine
@@ -69,3 +77,18 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - notification_network
+
+  notification-service:
+    container_name: notification-microservice
+    build: ./Notification-Microservice/notification-microservice
+    ports:
+      - 4002:4002
+    depends_on:
+      - rabbit
+    networks:
+      - notification_network
+
+networks:
+  notification_network:
