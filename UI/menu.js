@@ -74,7 +74,6 @@ const app = Vue.createApp(
     //     }
     // }, // computed
     created() {
-        console
       axios
         .get("http://localhost:8080/api/product")
         .then((response) => {
@@ -101,6 +100,7 @@ const app = Vue.createApp(
         });
       if (localStorage.getItem("orders")) {
         this.qty = JSON.parse(localStorage.getItem("orders"));
+        console.log(this.qty)
         
         for (q in this.qty) {
           for (i = this.qty[q]; i--; i > 0) {
@@ -131,6 +131,16 @@ const app = Vue.createApp(
             console.log(error);
             // Handle error
           });
+      },
+      continueShopping(){
+        for (q in this.qty) {
+            console.log(q)
+            if(this.qty[q]==0){
+                delete this.qty[q]
+            }
+        };
+        localStorage.setItem("orders", JSON.stringify(this.qty))
+        // console.log(localStorage.getItem("orders"))
       },
       updateQty() {
         this.addedToCart.forEach((c) => {
