@@ -8,7 +8,7 @@ import stripe
 
 from invokes import invoke_http
 
-# book_URL = "http://localhost:5000/book"
+
 order_URL = "http://order-service:8081/api/order"
 get_order_URL = "http://order-service:8081/api/order/findOrderById"
 menu_url = "http://product-service:8080/api/product"
@@ -26,8 +26,6 @@ update_field_url = "http://invoice-service:5000/updateField"
 search_url = "http://invoice-service:5000/search"
 stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0cTCPZUGCEFPAUXo59zcLa0EMK7CoCSY11LE00JZafQOs4'
 
-# activity_log_URL = "http://localhost:5003/activity_log"
-# error_URL = "http://localhost:5004/error"
 app = Flask(__name__)
 CORS(app)
 hostname = 'rabbit_pika'
@@ -191,7 +189,7 @@ def createSession(order):
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "There seem to be an error creating payment session"}
+        return {"status": 500, "error": "There seem to be an error creating payment session." + str(e)}
 
 # after payment, update payment intent. pass in session_id, this is automated
 
