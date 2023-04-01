@@ -43,12 +43,12 @@ services:
     depends_on:
       - mysqldb
     restart: always
-  # place_order-service:
-  #   container_name: place_order-service
-  #   build: ./Complex-Orders-Microservice
-  #   ports:
-  #     - 5100:5100
-  #   depends_on:
-  #     - order-service
-  #     - invoice-service
-  #     - product-service
+  place_order-service:
+    container_name: place_order-service
+    build: ./Complex-Orders-Microservice
+    ports:
+      - 5100:5100
+    depends_on:
+      - order-service
+      - invoice-service
+      - product-service
