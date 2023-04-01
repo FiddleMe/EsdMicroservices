@@ -1,85 +1,62 @@
 version: '3.8'
 services:
-  # order-service:
-  #   container_name: order-service
-  #   build: ./order-microservice
-  #   ports:
-  #     - 8081:8081
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/order
-  #     SPRING_DATASOURCE_USERNAME: root
-  #     SPRING_DATASOURCE_PASSWORD: root
-  #     spring.jpa.hibernate.ddl-auto: update
-  #   links:
-  #     - mysqldb
-  #   depends_on:
-  #     - mysqldb
-  #   restart: always
-  # mysqldb:
-  #   container_name: mysqldb
-  #   image: mysql
-  #   volumes:
-  #     - ./microservices-parent/mysql_data:/var/lib/mysql
-  #   ports:
-  #     - 3307:3306
-  #   environment:
-  #     - MYSQL_DATABASE=order
-  #     - MYSQL_ROOT_PASSWORD=root
-  # product-service:
-  #   container_name: product-service
-  #   build: ./product-service
-  #   ports:
-  #     - 8080:8080
-  # invoice-service:
-  #   container_name: invoice-microservice
-  #   build: ./invoice-microservice
-  #   ports:
-  #     - 5000:5000
-  # feedback-service:
-  #   container_name: feedback-microservice
-  #   build: ./feedback-microservice
-  #   ports:
-  #     - 5001:5001
-  #   depends_on:
-  #     - mysqldb
-  #   restart: always
-  # payment-service:
-  #   container_name: payment-microservice
-  #   build: ./payment-microservice
-  #   ports:
-  #     - 4242:4242
-  #   restart: always
-  # place_order-service:
-  #   container_name: place_order-service
-  #   build: ./Complex-Orders-Microservice
-  #   ports:
-  #     - 5100:5100
-  #   depends_on:
-  #     - order-service
-  #     - invoice-service
-  #     - product-service
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    hostname: rabbitmq
+  order-service:
+    container_name: order-service
+    build: ./order-microservice
     ports:
-      - 15672:15672
-      - 5672:5672
-    networks:
-      - notification_network
-
-  notification-service:
-    container_name: notification-microservice
-    build: ./Notification-Microservice/notification-microservice
-    ports:
-      - 4002:4002
-    depends_on:
-      - rabbitmq
+      - 8081:8081
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/order
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      spring.jpa.hibernate.ddl-auto: update
     links:
-      - rabbitmq
-    networks:
-      - notification_network
+      - mysqldb
+    depends_on:
+      - mysqldb
+    restart: always
+  mysqldb:
+    container_name: mysqldb
+    image: mysql
+    volumes:
+      - ./microservices-parent/mysql_data:/var/lib/mysql
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_DATABASE=order
+      - MYSQL_ROOT_PASSWORD=root
+  product-service:
+    container_name: product-service
+    build: ./product-service
+    ports:
+      - 8080:8080
+  invoice-service:
+    container_name: invoice-microservice
+    build: ./invoice-microservice
+    ports:
+      - 5000:5000
+  feedback-service:
+    container_name: feedback-microservice
+    build: ./feedback-microservice
+    ports:
+      - 5001:5001
+    depends_on:
+      - mysqldb
+    restart: always
+  payment-service:
+    container_name: payment-microservice
+    build: ./payment-microservice
+    ports:
+      - 4242:4242
+    restart: always
+  place_order-service:
+    container_name: place_order-service
+    build: ./Complex-Orders-Microservice
+    ports:
+      - 5100:5100
+    depends_on:
+      - order-service
+      - invoice-service
+      - product-service
 
-networks:
-  notification_network:
+  
