@@ -43,6 +43,12 @@ services:
     depends_on:
       - mysqldb
     restart: always
+  payment-service:
+    container_name: payment-microservice
+    build: ./payment-microservice
+    ports:
+      - 4242:4242
+    restart: always
   place_order-service:
     container_name: place_order-service
     build: ./Complex-Orders-Microservice
