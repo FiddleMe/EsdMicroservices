@@ -71,34 +71,33 @@ def calculate_bill():
         return {"status": 500, "error": str(e)}
 
 
-@app.route("/refundBill", methods=['PUT'])
-def refund_bill():
-    updates = request.get_json()
-    invoiceId = updates["InvoiceId"]
-    SessionId = updates["SessionId"]
-    PaymentIntentId = updates["PaymentIntentId"]
-    RefundId = updates["RefundId"]
-    RefundStatus = updates["RefundStatus"]
-    try:
-        response = user_collection.update_one(
-            {"InvoiceId": invoiceId},
-            {"$set": {
-                "SessionId ": SessionId,
-                "PaymentIntentId": PaymentIntentId,
-                "RefundId": RefundId,
-                "RefundStatus": RefundStatus
-            }}
-        )
-        if (response):
-            return {"status": 200}
-        else:
-            return {"status": 400, "error": "Failed to update invoice in database"}
-    except Exception as e:
-        return {"status": 500, "error": str(e)}
+# @app.route("/refundBill", methods=['PUT'])
+# def refund_bill():
+#     updates = request.get_json()
+#     invoiceId = updates["InvoiceId"]
+#     SessionId = updates["SessionId"]
+#     PaymentIntentId = updates["PaymentIntentId"]
+#     RefundId = updates["RefundId"]
+#     RefundStatus = updates["RefundStatus"]
+#     try:
+#         response = user_collection.update_one(
+#             {"InvoiceId": invoiceId},
+#             {"$set": {
+#                 "SessionId ": SessionId,
+#                 "PaymentIntentId": PaymentIntentId,
+#                 "RefundId": RefundId,
+#                 "RefundStatus": RefundStatus
+#             }}
+#         )
+#         if (response):
+#             return {"status": 200}
+#         else:
+#             return {"status": 400, "error": "Failed to update invoice in database"}
+#     except Exception as e:
+#         return {"status": 500, "error": str(e)}
+
 
 # update specific field
-
-
 @app.route("/updateField", methods=['PUT'])
 def update_field():
     updates = request.get_json()
@@ -134,9 +133,8 @@ def update_field():
     except Exception as e:
         return {"status": 500, "error": str(e)}
 
+
 # search invoices collection for specific data using either InvoiceId, PaymentIntentId, SessionId, RefundId (anything unique)
-
-
 @app.route("/search", methods=['GET'])
 def search():
     updates = request.get_json()
@@ -153,24 +151,24 @@ def search():
         return {"status": 500, "error": str(e)}
 
 
-@app.route("/updatePaymentStatus", methods=['PUT'])
-def update_paymentStatus():
-    updates = request.get_json()
-    invoiceId = updates["InvoiceId"]
-    PaymentStatus = updates["PaymentStatus"]
-    try:
-        response = user_collection.update_one(
-            {"InvoiceId": invoiceId},
-            {"$set": {
-                "PaymentStatus": PaymentStatus
-            }}
-        )
-        if (response):
-            return {"status": 200}
-        else:
-            return {"status": 400, "error": "Failed to update invoice in database"}
-    except Exception as e:
-        return {"status": 500, "error": str(e)}
+# @app.route("/updatePaymentStatus", methods=['PUT'])
+# def update_paymentStatus():
+#     updates = request.get_json()
+#     invoiceId = updates["InvoiceId"]
+#     PaymentStatus = updates["PaymentStatus"]
+#     try:
+#         response = user_collection.update_one(
+#             {"InvoiceId": invoiceId},
+#             {"$set": {
+#                 "PaymentStatus": PaymentStatus
+#             }}
+#         )
+#         if (response):
+#             return {"status": 200}
+#         else:
+#             return {"status": 400, "error": "Failed to update invoice in database"}
+#     except Exception as e:
+#         return {"status": 500, "error": str(e)}
 
 
 if __name__ == '__main__':
