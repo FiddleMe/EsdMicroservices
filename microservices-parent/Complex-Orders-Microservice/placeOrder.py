@@ -220,6 +220,17 @@ def updatePI():
         update = invoke_http(
             update_field_url, method="PUT", json=requestBody)
         if (update["status"] == 200):
+            connection = pika.BlockingConnection(
+                pika.ConnectionParameters(host=hostname, port=port,
+                                        heartbeat=3600, blocked_connection_timeout=3600))
+            channel = connection.channel()
+            channel.queue_declare(queue='update-status', durable=True)
+            message = {'recipient': 'owg321@gmail.com',
+                    'status_msg': f'Payment Successful. To initiate refund, use this PaymentIntentID: ({pi})'}
+            channel.basic_publish(exchange='',
+                                routing_key='update-status', body=json.dumps(message))
+            print("Message published to RabbitMQ")
+            connection.close()
             # PaymentStatus, pi, sessionID
             return {"status": 200, "data": pi_obj}
         else:
@@ -243,14 +254,6 @@ def refund():
             refund_url, method="GET", json=piRequestBody)
         print(refund_obj)
 
-        # recipient = "owg321@gmail.com"
-        # status_msg = "Refund Initiated"
-
-        # message_service = invoke_http(
-        #     f"http://localhost:4001/send-msg?recipient='{recipient}'&status_msg='{status_msg}'", method="GET")
-        # print(message_service + "...")
-
-        # publish message to rabbitmq
         connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=hostname, port=port,
                                       heartbeat=3600, blocked_connection_timeout=3600))
