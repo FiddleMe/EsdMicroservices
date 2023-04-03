@@ -1,16 +1,16 @@
-endpoints that require authentication should use requiresAuth() within the request. see http://localhost:3000/islogin as an example.
+endpoints that require authentication should use requiresAuth() within the request. see http://localhost:3001/islogin as an example.
 
 if port name has to be changed, contact me
-http://localhost:3000/, GET
+http://localhost:3001/, GET
 content
 
-http://localhost:3000/login, GET
+http://localhost:3001/login, GET
 login or signup user
 
-http://localhost:3000/logout, GET
+http://localhost:3001/logout, GET
 logout user
 
-http://localhost:3000/profile, GET
+http://localhost:3001/profile, GET
 displays profile
 profile format:
 {"nickname":"testuserderic",
@@ -31,7 +31,7 @@ To begin:
 2. run npm install
 3. run node authentication.js
 4. U should see an output like this: Using 'form_post' for response_mode may cause issues for you logging in over http, see https://github.com/auth0/express-openid-connect/blob/master/FAQ.md
-Example app listening on port 3000
+Example app listening on port 3001
 5. We have 2 acocunts u can login as a customer
 email: tiffanyhujiahui@gmail.com 
 password: 123*gmail
