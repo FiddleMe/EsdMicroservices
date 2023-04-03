@@ -11,7 +11,7 @@ app.use(cors())
 
 
 app.get("/", (req, res) => {
-  res.sendFile("/UI/menu.html", { root: __dirname });
+  res.sendFile("/UI/login.html", { root: __dirname });
 });
 
 app.get("/menu", (req, res) => {

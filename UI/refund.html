@@ -13,7 +13,7 @@
 </head>
 <body style="background-color: aliceblue;">
     <div id="app" class="mt-5">
-        <h1 class="text-center mb-5">Welcome back!</h1>
+        <h1 class="text-center mb-5">Welcome back! <button class="btn btn-info" onclick="window.location.href='/'">Home</button> </h1>
         <h1 class="text-center">Refund an order?</h1>
         <div class="text-center input-group mx-auto" style="width: 50%;"> <input type="text" placeholder="Enter your payment ID as in your email" class="form-control" v-model="pi"><button type="submit" class="btn btn-primary" @click="handleRefund">Refund</button></div>
         <div class="text-center my-0 py-0" id="refund">{{succrefund}}</div>
@@ -22,8 +22,8 @@
     <div class="text-center input-group mx-auto" style="width: 50%;"> 
         <!-- <p>Enter your refund Id as in your email</p>  -->
         <input type="text" class="form-control" placeholder="Enter your refund Id as in your email" v-model="refundId">
-    <button class="btn btn-primary" type="button" @click="check">Check status</button></div>  
-    <div class="text-center my-0 py-0" id="status">Hello</div>
+    <button class="btn btn-primary" type="button" @click="checkStatus">Check status</button></div>  
+    <div class="text-center my-0 py-0" id="status" v-show="status"> Refund Status: {{status}} </div>
     </div>
     <!-- Vue 3 -->
     <script src='https://cdn.jsdelivr.net/npm/vue@next'></script>

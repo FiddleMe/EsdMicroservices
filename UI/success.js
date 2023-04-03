@@ -44,9 +44,19 @@ const app = Vue.createApp(
           });
       },
       checkStatus() {
+        var dispStatus = document.getElementById('status')
         axios.post('http://127.0.0.1:5100/refundStatus ', JSON.stringify({RefundId: this.refundId}),{ headers: { "Content-Type": "application/json" } })
             .then(response => {
                 console.log(response.data);
+                this.status = response.data.data.refundStatus
+                if(this.status=='succeeded'){
+                  dispStatus.classList.add('bg-success')
+                  dispStatus.classList.add('text-light')
+                }
+                else {
+                  dispStatus.classList.add('bg-warning')
+                  dispStatus.classList.add('text-light')
+                }
             })
             .catch( error => {
                 console.log(error.message);

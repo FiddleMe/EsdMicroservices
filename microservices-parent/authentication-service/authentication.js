@@ -23,7 +23,7 @@ app.use(cors());
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
     if (req.oidc.isAuthenticated()){
-        localStorage.setItem('accesstoken',req.oidc.accessToken)
+        localStorage.setItem('email',req.oidc.user.name)
         res.redirect('http://127.0.0.1:5500/UI/menu.html');
     }
     else{
