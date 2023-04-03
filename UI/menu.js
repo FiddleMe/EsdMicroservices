@@ -81,7 +81,7 @@ const app = Vue.createApp(
       console.log(localStorage.getItem("no"));
       // console.log(localStorage.getItem('axios/placeorder'))
       axios
-        .get("http://localhost:8080/api/product")
+        .get("http://localhost:8000/api/product")
         .then((response) => {
           this.menu = response.data;
         })
@@ -89,7 +89,7 @@ const app = Vue.createApp(
           console.log(error.message);
         });
       axios
-        .get("http://localhost:5010/analytics/top_menu_items")
+        .get("http://localhost:8000/api/analytics/top_menu_items")
         .then((response) => {
           console.log(response.data)
           this.recommended = response.data.data;
@@ -138,7 +138,7 @@ const app = Vue.createApp(
         };
 
         axios
-          .post("http://127.0.0.1:5100/place_order", JSON.stringify(args), {
+          .post("http://localhost:8000/api/order/place_order", JSON.stringify(args), {
             headers: { "Content-Type": "application/json" },
           })
           .then((response) => {
@@ -148,7 +148,7 @@ const app = Vue.createApp(
             console.log(response.data.data.order.orderId);
             axios
               .post(
-                "http://127.0.0.1:5100/requestInvoice",
+                "http://localhost:8000/api/order/invoice/requestInvoice",
                 JSON.stringify({ orderId: placeOrderId }),
                 { headers: { "Content-Type": "application/json" } }
               )
