@@ -70,12 +70,13 @@ def paymentStatus():
 # refund
 
 
-@app.route('/refund')
+@app.route('/refund', methods=['POST'])
 def refund():
     refund_data = request.get_json()
     paymentIntent = refund_data["pi"]
     # create stripe refund object
     refund = stripe.Refund.create(payment_intent=paymentIntent)
+    print(refund)
 
     dataDict = {
         "paymentIntentID": paymentIntent,

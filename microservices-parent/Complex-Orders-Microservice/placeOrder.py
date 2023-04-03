@@ -257,30 +257,19 @@ def updatePI():
 # send in PaymentIntentId to initiate refund
 
 
-@app.route("/refund", methods=['GET'])
+@app.route("/refund", methods=['POST'])
 def refund():
     requests = request.get_json()
     pi = requests['pi']
+    customerId = requests['customerId']
     piRequestBody = {
         "pi": pi
     }
     # get and update RefundId and RefudnStatus
     try:
         refund_obj = invoke_http(
-            refund_url, method="GET", json=piRequestBody)
+            refund_url, method="POST", json=piRequestBody)
         print(refund_obj)
-
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=hostname, port=port,
-                                      heartbeat=3600, blocked_connection_timeout=3600))
-        channel = connection.channel()
-        channel.queue_declare(queue='update-status', durable=True)
-        message = {'recipient': 'owg321@gmail.com',
-                   'status_msg': f'Refund Initiated ({pi})'}
-        channel.basic_publish(exchange='',
-                              routing_key='update-status', body=json.dumps(message))
-        print("Message published to RabbitMQ")
-        connection.close()
 
         requestBody = {
             "PaymentIntentId": pi,
@@ -291,6 +280,17 @@ def refund():
         update = invoke_http(
             update_field_url, method="PUT", json=requestBody)
         if (update["status"] == 200):
+            connection = pika.BlockingConnection(
+                pika.ConnectionParameters(host=hostname, port=port,
+                                        heartbeat=3600, blocked_connection_timeout=3600))
+            channel = connection.channel()
+            channel.queue_declare(queue='update-status', durable=True)
+            message = {'recipient': customerId,
+                    'status_msg': f'Refund Initiated ({pi})'}
+            channel.basic_publish(exchange='',
+                                routing_key='update-status', body=json.dumps(message))
+            print("Message published to RabbitMQ")
+            connection.close()
             return {"status": 200, "data": refund_obj}
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
@@ -300,7 +300,7 @@ def refund():
 # get refund status and update database, this is for customer to check status
 
 
-@app.route("/refundStatus", methods=['GET'])
+@app.route("/refundStatus", methods=['POST'])
 def refundStatus():
     requests = request.get_json()
     RefundId = requests['RefundId']
