@@ -13,9 +13,9 @@ order_URL = "http://order-service:8081/api/order"
 get_order_URL = "http://order-service:8081/api/order/findOrderById"
 menu_url = "http://product-service:8080/api/product"
 create_invoice_url = "http://invoice-service:5000/calculate-bill"
-
 create_checkout_url = "http://payment-microservice:4242/create-checkout-session"
 # pass in session_id at the back
+update_invoice_orderdb = "http://order-service:8081/api/order/updateOrderById"
 payment_status_url = "http://payment-microservice:4242/paymentStatus"
 # pass in payment_intent at the back
 refund_url = "http://payment-microservice:4242/refund"
@@ -76,6 +76,11 @@ def requestInvoice():
             print("-------\n")
             print("result")
             print(invoice)
+            invoiceId = invoice["body"]["InvoiceId"]
+            updatedbparams = {"orderId": orderId,
+                              "invoiceId": invoiceId}
+            updateOrder = updateOrderDb(updatedbparams)
+            print(updateOrder)
             session = createSession(invoice["body"])
             return session
         except Exception as e:
@@ -152,12 +157,24 @@ def processPlaceOrder(order):
         }
 
 
+def updateOrderDb(invoice):
+    orderId = invoice["orderId"]
+    invoiceId = invoice["invoiceId"]
+    updateOrder = invoke_http(
+        update_invoice_orderdb, method="PUT", params={
+            'OrderId': orderId,
+            'InvoiceId': invoiceId
+        }
+    )
+    print(updateOrder)
+    return updateOrder
+
+
 def processInvoice(orderId):
     # orderId = orderId["orderId"]
     print(orderId)
     order = invoke_http(get_order_URL, method='GET',
                         params={'OrderId': orderId})
-
     reqOrder = order["order"]
     print(reqOrder)
     menu = invoke_http(menu_url, method="GET")
@@ -168,8 +185,8 @@ def processInvoice(orderId):
     print(requestBody)
     createInvoice = invoke_http(
         create_invoice_url, method="POST", json=requestBody)
-    print("create invoicer result:", createInvoice)
 
+    print("create invoicer result:", createInvoice)
     return createInvoice
 
 # create checkout session, return session id
@@ -182,7 +199,7 @@ def createSession(order):
     customerId = InvoiceId.split("_")[1]
     requestBody = {
         "TotalPrice": totalPrice,
-        "customerId" : customerId
+        "customerId": customerId
     }
     # create payment session
 
@@ -282,13 +299,13 @@ def refund():
         if (update["status"] == 200):
             connection = pika.BlockingConnection(
                 pika.ConnectionParameters(host=hostname, port=port,
-                                        heartbeat=3600, blocked_connection_timeout=3600))
+                                          heartbeat=3600, blocked_connection_timeout=3600))
             channel = connection.channel()
             channel.queue_declare(queue='update-status', durable=True)
             message = {'recipient': customerId,
-                    'status_msg': f'Refund Initiated ({pi})'}
+                       'status_msg': f'Refund Initiated ({pi})'}
             channel.basic_publish(exchange='',
-                                routing_key='update-status', body=json.dumps(message))
+                                  routing_key='update-status', body=json.dumps(message))
             print("Message published to RabbitMQ")
             connection.close()
             return {"status": 200, "data": refund_obj}
