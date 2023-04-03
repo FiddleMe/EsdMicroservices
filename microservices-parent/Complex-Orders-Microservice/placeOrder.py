@@ -67,7 +67,8 @@ def place_order():
 def requestInvoice():
     if request.is_json:
         try:
-            orderId = request.get_json()
+            request_data = request.get_json()
+            orderId = request_data["orderId"]
             print(orderId)
             print("received order")
             invoice = processInvoice(orderId)
@@ -152,7 +153,7 @@ def processPlaceOrder(order):
 
 
 def processInvoice(orderId):
-    orderId = orderId["orderId"]
+    # orderId = orderId["orderId"]
     print(orderId)
     order = invoke_http(get_order_URL, method='GET',
                         params={'OrderId': orderId})
@@ -178,8 +179,10 @@ def processInvoice(orderId):
 def createSession(order):
     totalPrice = int(order['TotalPrice']) * 100
     InvoiceId = order['InvoiceId']
+    customerId = InvoiceId.split("_")[1]
     requestBody = {
-        "TotalPrice": totalPrice
+        "TotalPrice": totalPrice,
+        "customerId" : customerId
     }
     # create payment session
 
@@ -237,7 +240,7 @@ def updatePI():
                                           heartbeat=3600, blocked_connection_timeout=3600))
             channel = connection.channel()
             channel.queue_declare(queue='update-status', durable=True)
-            message = {'recipient': 'owg321@gmail.com',
+            message = {'recipient': request.args.get('customerId'),
                        'status_msg': f'Payment Successful. To initiate refund, use this PaymentIntentID: ({pi})'}
             channel.basic_publish(exchange='',
                                   routing_key='update-status', body=json.dumps(message))

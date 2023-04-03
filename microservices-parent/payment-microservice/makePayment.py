@@ -20,6 +20,7 @@ stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0
 def create_checkout_session():
     order = request.get_json()
     totalPrice = order["TotalPrice"]
+    customerId = order["customerId"]
     startTime = int(time.time())  # timing to set 30mins expiry
     # create stripe refund object
     session = stripe.checkout.Session.create(
@@ -36,7 +37,7 @@ def create_checkout_session():
         }],
         mode='payment',
         expires_at=startTime + 1800,
-        success_url='http://127.0.0.1:5100/updatePI?SessionId={CHECKOUT_SESSION_ID}'
+        success_url='http://127.0.0.1:5100/updatePI?SessionId={CHECKOUT_SESSION_ID}' + f"&customerId={customerId}"
     )
 
     dataDict = {
