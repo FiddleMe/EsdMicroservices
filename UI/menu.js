@@ -159,6 +159,8 @@ const app = Vue.createApp(
               .then((response) => {
                 console.log("in axios");
                 console.log(response.data);
+                localStorage.removeItem('orders')
+                this.qty = {}
                 window.open(response.data.data.url, "_blank")
                 // localStorage.setItem("yes", response.data);
                 // axios
