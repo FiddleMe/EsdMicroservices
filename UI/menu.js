@@ -155,19 +155,19 @@ const app = Vue.createApp(
                 console.log("in axios");
                 console.log(response.data);
                 localStorage.setItem("yes", response.data);
-                axios
-                  .post("http://127.0.0.1:4242/create-checkout-session", {
-                    TotalPrice: this.total() * 100, // Replace with your desired total price
-                  })
-                  .then((response) => {
-                    // Handle success response
-                    console.log(response);
-                    window.location.href = response.data.url;
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                    // Handle error
-                  });
+                // axios
+                //   .post("http://127.0.0.1:4242/create-checkout-session", {
+                //     TotalPrice: this.total() * 100, // Replace with your desired total price
+                //   })
+                //   .then((response) => {
+                //     // Handle success response
+                //     console.log(response);
+                //     window.location.href = response.data.url;
+                //   })
+                //   .catch((error) => {
+                //     console.log(error);
+                //     // Handle error
+                //   });
               })
               .catch((error) => {
                 console.log("in axios");
