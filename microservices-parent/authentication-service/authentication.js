@@ -14,24 +14,14 @@ const app = express();
 const port = 3001
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
-
-const cors = require('cors');
-
-// Enable CORS for all routes
-app.use(cors());
-
+var email;
 // req.isAuthenticated is provided from the auth router
-app.get('/', (req, res) => {
-    if (req.oidc.isAuthenticated()){
-        localStorage.setItem('email',req.oidc.user.name)
-        res.redirect('http://127.0.0.1:5500/UI/menu.html');
-    }
-    else{
-        res.send('Logged out');
-    }
+app.get('/', requiresAuth(), (req, res) => {
+    email = req.oidc.user.email;
+    res.redirect('http://127.0.0.1:5500/UI/menu.html?email='+email);
     });
 
-app.get('/profile', requiresAuth(), (req, res) => {
+app.get('/profile', (req, res) => {
     res.send(JSON.stringify(req.oidc.user));
     });
 
