@@ -8,22 +8,22 @@ import stripe
 
 from invokes import invoke_http
 
-update_order_url = "http://localhost:8081/api/order/updateOrderById"
-order_URL = "http://localhost:8081/api/order"
-get_order_URL = "http://localhost:8081/api/order/findOrderById"
-menu_url = "http://localhost:8080/api/product"
-create_invoice_url = "http://localhost:5000/calculate-bill"
+update_order_url = "http://order-service:8081/api/order/updateOrderById"
+order_URL = "http://order-service:8081/api/order"
+get_order_URL = "http://order-service:8081/api/order/findOrderById"
+menu_url = "http://product-service:8080/api/product"
+create_invoice_url = "http://invoice-service:5000/calculate-bill"
 
-create_checkout_url = "http://localhost:4242/create-checkout-session"
+create_checkout_url = "http://payment-service:4242/create-checkout-session"
 # pass in session_id at the back
-payment_status_url = "http://localhost:4242/paymentStatus"
+payment_status_url = "http://payment-service:4242/paymentStatus"
 # pass in payment_intent at the back
-refund_url = "http://localhost:4242/refund"
+refund_url = "http://payment-service:4242/refund"
 # pass in refundID at the back
-refund_status_url = "http://localhost:4242/refundStatus"
-update_field_url = "http://localhost:5000/updateField"
+refund_status_url = "http://payment-service:4242/refundStatus"
+update_field_url = "http://invoice-service:5000/updateField"
 # pass in any unique id to find data from invoices collection
-search_url = "http://localhost:5000/search"
+search_url = "http://invoice-service:5000/search"
 stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0cTCPZUGCEFPAUXo59zcLa0EMK7CoCSY11LE00JZafQOs4'
 
 app = Flask(__name__)
@@ -76,6 +76,10 @@ def requestInvoice():
             print("-------\n")
             print("result")
             print(invoice)
+            invoiceId = invoice["body"]["InvoiceId"]
+            paramreq = {"OrderId": orderId, "InvoiceId": invoiceId}
+            updateorder = updateOrderdb(paramreq)
+            print(updateorder)
             session = createSession(invoice["body"])
             return session
         except Exception as e:
@@ -93,6 +97,15 @@ def requestInvoice():
         "code": 400,
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
+
+
+def updateOrderdb(invoice):
+    invoiceId = invoice["InvoiceId"]
+    orderId = invoice["OrderId"]
+    updateorder = invoke_http(
+        update_order_url, method="PUT", params={"OrderId": orderId, "InvoiceId": invoiceId}
+    )
+    return updateorder
 
 
 def processPlaceOrder(order):
@@ -168,14 +181,6 @@ def processInvoice(orderId):
     print(requestBody)
     createInvoice = invoke_http(
         create_invoice_url, method="POST", json=requestBody)
-    InvoiceId = createInvoice["body"]["InvoiceId"]
-    updateOrder = invoke_http(
-        update_order_url, method="PUT", params={
-            "OrderId": orderId,
-            "InvoiceId": InvoiceId
-        }
-    )
-    print(updateOrder)
     print("create invoicer result:", createInvoice)
     return createInvoice
 
