@@ -132,11 +132,23 @@ def processPlaceOrder(order):
             "data": {"order": order},
             "message": "Order created."
         }
-    return {
-        "code": 500,
-        "data": {"order_result": order_result},
-        "message": "Order creation failure sent for error handling."
-    }
+    else:
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host=hostname, port=port,
+                                      heartbeat=3600, blocked_connection_timeout=3600))
+        channel = connection.channel()
+        channel.queue_declare(queue='update-status', durable=True)
+        message = {'recipient': 'iamsomoene@gmail.com',
+                   'status_msg': 'Order Failed, Please Try Again'}  # modify as needed
+        channel.basic_publish(exchange='',
+                              routing_key='update-status', body=json.dumps(message))
+        print("Message published to RabbitMQ")
+
+        return {
+            "code": 500,
+            "data": {"order_result": order_result},
+            "message": "Order creation failure sent for error handling."
+        }
 
 
 def processInvoice(orderId):
@@ -222,13 +234,13 @@ def updatePI():
         if (update["status"] == 200):
             connection = pika.BlockingConnection(
                 pika.ConnectionParameters(host=hostname, port=port,
-                                        heartbeat=3600, blocked_connection_timeout=3600))
+                                          heartbeat=3600, blocked_connection_timeout=3600))
             channel = connection.channel()
             channel.queue_declare(queue='update-status', durable=True)
             message = {'recipient': 'owg321@gmail.com',
-                    'status_msg': f'Payment Successful. To initiate refund, use this PaymentIntentID: ({pi})'}
+                       'status_msg': f'Payment Successful. To initiate refund, use this PaymentIntentID: ({pi})'}
             channel.basic_publish(exchange='',
-                                routing_key='update-status', body=json.dumps(message))
+                                  routing_key='update-status', body=json.dumps(message))
             print("Message published to RabbitMQ")
             connection.close()
             # PaymentStatus, pi, sessionID
