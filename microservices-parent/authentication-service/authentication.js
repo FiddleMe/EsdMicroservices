@@ -18,7 +18,7 @@ var email;
 // req.isAuthenticated is provided from the auth router
 app.get('/', requiresAuth(), (req, res) => {
     email = req.oidc.user.email;
-    res.redirect('http://127.0.0.1:5500/UI/menu.html?email='+email);
+    res.redirect('http://localhost:3000/menu?email='+email);
     });
 
 app.get('/profile', (req, res) => {

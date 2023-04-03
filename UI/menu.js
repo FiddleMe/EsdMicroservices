@@ -77,6 +77,10 @@ const app = Vue.createApp(
     //     }
     // }, // computed
     created() {
+      let params = new URL(document.location).searchParams;
+      let email = params.get("email");
+      localStorage.setItem('email',email)
+      // console.log(localStorage.getItem('email'))
       // console.log(localStorage.getItem("yes"));
       // console.log(localStorage.getItem("no"));
       // console.log(localStorage.getItem('axios/placeorder'))
@@ -114,7 +118,7 @@ const app = Vue.createApp(
             this.addedToCart.push(q);
           }
         }
-        if (document.location.href == "http://localhost:5500/UI/menu.html") {
+        if (document.location.href == "http://localhost:3000/menu.html") {
           localStorage.clear();
           this.qty = {};
         }
@@ -133,7 +137,7 @@ const app = Vue.createApp(
         }
         var args = {
           orderLineItemsDtoList: orderss,
-          customerId: 1134,
+          customerId: localStorage.getItem('email'),
           Mode: "eatinghere",
         };
 

@@ -15,7 +15,7 @@ const app = Vue.createApp(
       handleRefund() {
         var dispRefund = document.getElementById('refund')
         if (!this.pi){
-          let params = new URL(document.location).searchParams;
+        let params = new URL(document.location).searchParams;
         let paymentId = params.get("RefundId");
         this.pi = paymentId
         }
@@ -24,7 +24,7 @@ const app = Vue.createApp(
             "http://localhost:5100/refund",
             JSON.stringify({
               pi: this.pi,
-              customerId: "ksitishareefa14@gmail.com",
+              customerId: localStorage.getItem('email'),
             }),
             { headers: { "Content-Type": "application/json" } }
           )
@@ -51,6 +51,8 @@ const app = Vue.createApp(
                 this.status = response.data.data.refundStatus
                 if(this.status=='succeeded'){
                   dispStatus.classList.add('bg-success')
+                  dispStatus.classList.remove('bg-warning')
+                  dispStatus.classList.remove('bg-danger')
                   dispStatus.classList.add('text-light')
                 }
                 else {
