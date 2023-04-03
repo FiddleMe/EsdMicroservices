@@ -1,5 +1,5 @@
 axios
-  .get("http://127.0.0.1:5010/analytics/pos_neg_percent")
+  .get("http://localhost:8000/api/analytics/pos_neg_percent")
   .then((response) => {
     const data = response.data.data.feedback_percentages;
 
@@ -33,7 +33,7 @@ axios
   });
 
   axios
-  .get("http://127.0.0.1:5010/analytics/mode_of_eating")
+  .get("http://localhost:8000/api/analytics/mode_of_eating")
   .then((response) => {
     const data = response.data.data;
     var chart = new CanvasJS.Chart("modeOfEatingChart", {
@@ -49,15 +49,15 @@ axios
           toolTipContent: "#percent%",
           dataPoints: [
             {
-              y: parseInt(data.test),
+              y: parseInt(data.eatinghere),
               legendText: "Eat In",
               indexLabel: "Eat In ",
             },
-            // {
-            //   y: parseInt(data.negative_feedback),
-            //   legendText: "Eat Out",
-            //   indexLabel: "Eat Out",
-            // },
+            {
+              y: parseInt(data.test),
+              legendText: "Take Out",
+              indexLabel: "Take Out ",
+            },
           ],
         },
       ],
@@ -66,7 +66,7 @@ axios
   });
 
   axios
-  .get("http://127.0.0.1:5010/analytics/top_words")
+  .get("http://localhost:8000/api/analytics/top_words")
   .then((response) => {
     const data = response.data.data;
     console.log(data);
@@ -74,25 +74,23 @@ axios
     var chart = new CanvasJS.Chart("chartContainer3", {
       animationEnabled: true,
       title: {
-        text: "% of Top Menu Items",
+        text: "Top Words",
       },
       data: [
         {
-          type: "pie",
+          type: "bar",
           showInLegend: true,
-          percentFormatString: "#0.##",
-          toolTipContent: "#percent%",
           dataPoints: [
             {
-              y: parseInt(data.test),
-              legendText: "Eat In",
-              indexLabel: "Eat In ",
+              y: parseInt(data.most_common_positive_words),
+              legendText: "Most common positive words",
+              indexLabel: "Most common positive words",
             },
-            // {
-            //   y: parseInt(data.negative_feedback),
-            //   legendText: "Eat Out",
-            //   indexLabel: "Eat Out",
-            // },
+            {
+              y: parseInt(data.most_common_negative_words),
+              legendText: "Most common negative words",
+              indexLabel: "Most common negative words",
+            },
           ],
         },
       ],

@@ -224,8 +224,8 @@ def find_top_words():
         negative_word_fd = nltk.FreqDist(negative_bag_of_words)
         most_common_positive = positive_word_fd.most_common(5)
         most_common_negative = negative_word_fd.most_common(5)
-        result = {"most common positive words": most_common_positive,
-                  "most common negative words": most_common_negative}
+        result = {"most_common_positive_words": most_common_positive,
+                  "most_common_negative_words": most_common_negative}
         return jsonify(
             {
                 "code": 200,

@@ -6,7 +6,7 @@ const app = Vue.createApp({
         let paymentId = params.get("payment_intent");
 
         axios
-          .post("http://localhost:5100/refund", {
+          .post("http://localhost:8000/api/order/refund/refund", {
             pi: paymentId,
           })
           .then((response) => {
