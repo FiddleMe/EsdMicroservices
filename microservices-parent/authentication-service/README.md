@@ -35,6 +35,7 @@ Example app listening on port 3000
 5. We have 2 acocunts u can login as a customer
 email: tiffanyhujiahui@gmail.com 
 password: 123*gmail
+or
 email: ksitishareefa14@gmail.com 
 password: Esd123456*
 6. To signup, please note you need to use a real email
