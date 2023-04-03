@@ -15,9 +15,15 @@ const port = 3001
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
+const cors = require('cors');
+
+// Enable CORS for all routes
+app.use(cors());
+
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
     if (req.oidc.isAuthenticated()){
+        localStorage.setItem('accesstoken',req.oidc.accessToken)
         res.redirect('http://127.0.0.1:5500/UI/menu.html');
     }
     else{

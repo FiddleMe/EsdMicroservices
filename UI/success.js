@@ -1,72 +1,56 @@
-const app = Vue.createApp({
+// const { json } = require("stream/consumers");
+
+const app = Vue.createApp(
+  {
+    data() {
+      return {
+        pi: "",
+        refundId: "",
+        succrefund: "",
+        status: ""
+      };
+    },
 
     methods: {
       handleRefund() {
-        let params = new URL(document.location).searchParams;
+        var dispRefund = document.getElementById('refund')
+        if (!this.pi){
+          let params = new URL(document.location).searchParams;
         let paymentId = params.get("RefundId");
-        console.log(paymentId)
-
-        axios.get('http://localhost:5100/refund', {
-            params: {
-                pi:  paymentId
-            }
-        }, { headers: { "Content-Type": "application/json" } })
+        this.pi = paymentId
+        }
+        axios
+          .post(
+            "http://localhost:5100/refund",
+            JSON.stringify({
+              pi: this.pi,
+              customerId: "ksitishareefa14@gmail.com",
+            }),
+            { headers: { "Content-Type": "application/json" } }
+          )
+          .then((response) => {
+            console.log(response.data);
+            this.refundId=response.data.data.refundID
+            console.log(this.refundId)
+            this.succrefund= "Refund requested. RefundID: "+ this.refundId
+            dispRefund.classList.add('bg-success')
+            dispRefund.classList.add('text-light')
+          })
+          .catch((error) => {
+            console.log(error.message);
+            this.succrefund = "Failed to create refund, it is likely that refund has already been initiated for this payment intent"
+            dispRefund.classList.add('bg-danger')
+            dispRefund.classList.add('text-light')
+          });
+      },
+      checkStatus() {
+        axios.post('http://127.0.0.1:5100/refundStatus ', JSON.stringify({RefundId: this.refundId}),{ headers: { "Content-Type": "application/json" } })
             .then(response => {
                 console.log(response.data);
             })
             .catch( error => {
                 console.log(error.message);
             });
-
-        // axios.get('http://localhost:5100/refund', JSON.stringify({pi: paymentId}), { headers: { "Content-Type": "application/json" } })
-        //     .then(response => {
-        //         console.log(response.data);
-        //     })
-        //     .catch( error => {
-        //         console.log(error.message);
-        //     });
-
-        // axios
-        //   .post("http://localhost:5100/refund", JSON.stringify({pi: paymentId}), { headers: { "Content-Type": "application/json" } })
-        //   .then((response) => {
-        //     // Handle success response
-        //     // window.location.href = "http://localhost:3000/refund";
-        //     console.log(response.data)
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //     // Handle error
-        //   });
-      },
-      updateQty() {
-        this.addedToCart.forEach((c) => {
-          if (!this.qty[c]) {
-            this.qty[c] = 0;
-          }
-          this.qty[c] += 1;
-          localStorage.setItem("orders", JSON.stringify(this.qty));
-          // console.log(localStorage.getItem('orders'))
-        });
-      },
-      addToCart(x) {
-        this.addedToCart.push(x);
-        // console.log(this.addedToCart)
-        // localStorage.setItem('orders',JSON.stringify(this.qty))
-      },
-      getPrice(o) {
-        for (m of this.menu) {
-          if (m.name == o) {
-            return m.price;
-          }
-        }
-      },
-      total() {
-        total = 0;
-        for (x in this.qty) {
-          // console.log(x)
-          total += this.getPrice(x) * this.qty[x];
-        }
-        return total;
       },
     },
   } // methods

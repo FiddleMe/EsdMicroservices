@@ -1,5 +1,6 @@
 {
   "java.compile.nullAnalysis.mode": "automatic",
   "java.dependency.syncWithFolderExplorer": true,
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "livePreview.defaultPreviewPath": "/UI/login.html"
 }
