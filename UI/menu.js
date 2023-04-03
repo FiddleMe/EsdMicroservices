@@ -66,8 +66,8 @@ const app = Vue.createApp(
         },
         addedToCart: [],
         qty: {},
-        recommended: [],
-        recoDetails: [],
+        recommended: []
+        // recoDetails: [],
         // total: 0
       };
     }, // data
@@ -91,15 +91,16 @@ const app = Vue.createApp(
       axios
         .get("http://localhost:5010/analytics/top_menu_items")
         .then((response) => {
+          console.log(response.data)
           this.recommended = response.data.data;
-          response.data.data.forEach((r) => {
-            this.menu.forEach((m) => {
-              if (r == m.name) {
-                this.recoDetails.push(m);
-              }
-            });
-          });
-          console.log(this.recoDetails);
+          // response.data.data.forEach((r) => {
+          //   this.menu.forEach((m) => {
+          //     if (r == m.name) {
+          //       this.recoDetails.push(m);
+          //     }
+          //   });
+          // });
+          // console.log(this.recoDetails);
         })
         .catch((error) => {
           console.log(error.message);
@@ -154,7 +155,8 @@ const app = Vue.createApp(
               .then((response) => {
                 console.log("in axios");
                 console.log(response.data);
-                localStorage.setItem("yes", response.data);
+                window.open(response.data.data.url, "_blank")
+                // localStorage.setItem("yes", response.data);
                 // axios
                 //   .post("http://127.0.0.1:4242/create-checkout-session", {
                 //     TotalPrice: this.total() * 100, // Replace with your desired total price

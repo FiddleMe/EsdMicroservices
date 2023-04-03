@@ -3,20 +3,40 @@ const app = Vue.createApp({
     methods: {
       handleRefund() {
         let params = new URL(document.location).searchParams;
-        let paymentId = params.get("payment_intent");
+        let paymentId = params.get("RefundId");
+        console.log(paymentId)
 
-        axios
-          .post("http://localhost:5100/refund", {
-            pi: paymentId,
-          })
-          .then((response) => {
-            // Handle success response
-            window.location.href = "http://localhost:3000/refund";
-          })
-          .catch((error) => {
-            console.log(error);
-            // Handle error
-          });
+        axios.get('http://localhost:5100/refund', {
+            params: {
+                pi:  paymentId
+            }
+        }, { headers: { "Content-Type": "application/json" } })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch( error => {
+                console.log(error.message);
+            });
+
+        // axios.get('http://localhost:5100/refund', JSON.stringify({pi: paymentId}), { headers: { "Content-Type": "application/json" } })
+        //     .then(response => {
+        //         console.log(response.data);
+        //     })
+        //     .catch( error => {
+        //         console.log(error.message);
+        //     });
+
+        // axios
+        //   .post("http://localhost:5100/refund", JSON.stringify({pi: paymentId}), { headers: { "Content-Type": "application/json" } })
+        //   .then((response) => {
+        //     // Handle success response
+        //     // window.location.href = "http://localhost:3000/refund";
+        //     console.log(response.data)
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //     // Handle error
+        //   });
       },
       updateQty() {
         this.addedToCart.forEach((c) => {
