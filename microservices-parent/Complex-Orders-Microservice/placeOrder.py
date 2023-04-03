@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
 import pika
 import os
@@ -132,11 +132,23 @@ def processPlaceOrder(order):
             "data": {"order": order},
             "message": "Order created."
         }
-    return {
-        "code": 500,
-        "data": {"order_result": order_result},
-        "message": "Order creation failure sent for error handling."
-    }
+    else:
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host=hostname, port=port,
+                                      heartbeat=3600, blocked_connection_timeout=3600))
+        channel = connection.channel()
+        channel.queue_declare(queue='update-status', durable=True)
+        message = {'recipient': 'iamsomoene@gmail.com',
+                   'status_msg': 'Order Failed, Please Try Again'}  # modify as needed
+        channel.basic_publish(exchange='',
+                              routing_key='update-status', body=json.dumps(message))
+        print("Message published to RabbitMQ")
+
+        return {
+            "code": 500,
+            "data": {"order_result": order_result},
+            "message": "Order creation failure sent for error handling."
+        }
 
 
 def processInvoice(orderId):
@@ -220,12 +232,24 @@ def updatePI():
         update = invoke_http(
             update_field_url, method="PUT", json=requestBody)
         if (update["status"] == 200):
+            connection = pika.BlockingConnection(
+                pika.ConnectionParameters(host=hostname, port=port,
+                                          heartbeat=3600, blocked_connection_timeout=3600))
+            channel = connection.channel()
+            channel.queue_declare(queue='update-status', durable=True)
+            message = {'recipient': 'owg321@gmail.com',
+                       'status_msg': f'Payment Successful. To initiate refund, use this PaymentIntentID: ({pi})'}
+            channel.basic_publish(exchange='',
+                                  routing_key='update-status', body=json.dumps(message))
+            print("Message published to RabbitMQ")
+            connection.close()
             # PaymentStatus, pi, sessionID
-            return {"status": 200, "data": pi_obj}
+            # return {"status": 200, "data": pi_obj}
+            return redirect(f'http://localhost:3000/success?RefundId={pi}')
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "There seem to be an error fetching payment intent"}
+        return {"status": 500, "error": "There seem to be an error fetching payment intent." + str(e)}
 
 # send in PaymentIntentId to initiate refund
 
@@ -243,14 +267,6 @@ def refund():
             refund_url, method="GET", json=piRequestBody)
         print(refund_obj)
 
-        # recipient = "owg321@gmail.com"
-        # status_msg = "Refund Initiated"
-
-        # message_service = invoke_http(
-        #     f"http://localhost:4001/send-msg?recipient='{recipient}'&status_msg='{status_msg}'", method="GET")
-        # print(message_service + "...")
-
-        # publish message to rabbitmq
         connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=hostname, port=port,
                                       heartbeat=3600, blocked_connection_timeout=3600))
@@ -276,7 +292,7 @@ def refund():
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "Failed to create refund, it is likely that refund has already been initiated for this payment intent"}
+        return {"status": 500, "error": "Failed to create refund, it is likely that refund has already been initiated for this payment intent." + str(e)}
 
 # get refund status and update database, this is for customer to check status
 
@@ -313,7 +329,7 @@ def refundStatus():
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "There seem to be an error fetching refund data"}
+        return {"status": 500, "error": "There seem to be an error fetching refund data." + str(e)}
 
 
 if __name__ == "__main__":

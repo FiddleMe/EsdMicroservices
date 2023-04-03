@@ -22,7 +22,6 @@ profile format:
 "sub":"auth0|641abca8f939365a568eb569",
 "sid":"jef90Zz169wQm81Zyf-kQofxykeYt1WZ"}
 
-
 references:
 https://auth0.github.io/express-openid-connect/
 https://auth0.com/blog/auth0-s-express-openid-connect-sdk/
@@ -33,3 +32,9 @@ To begin:
 3. run node authentication.js
 4. U should see an output like this: Using 'form_post' for response_mode may cause issues for you logging in over http, see https://github.com/auth0/express-openid-connect/blob/master/FAQ.md
 Example app listening on port 3000
+5. We have 2 acocunts u can login as a customer
+email: tiffanyhujiahui@gmail.com 
+password: 123*gmail
+email: ksitishareefa14@gmail.com 
+password: Esd123456*
+6. To signup, please note you need to use a real email
