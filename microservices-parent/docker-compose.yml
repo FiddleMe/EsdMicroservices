@@ -58,6 +58,14 @@ services:
       - order-service
       - invoice-service
       - product-service
+  make-refund-service:
+    container_name: make-refund-service
+    build: ./refund-complex-microservice
+    ports:
+      - 4100:4100
+    depends_on:
+      - invoice-service
+      - payment-service
   analytics-service:
     container_name:  analytics-service
     build: ./analytics-complex-microservice
