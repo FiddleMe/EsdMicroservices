@@ -102,3 +102,10 @@ services:
     depends_on:
       - rabbit
     command: bash -c "for i in {1..15} ; do if ! curl -s rabbitmq:5672 > /dev/null ; then echo waiting on rabbitmq for $i seconds; sleep 3; fi; done; node index.js"
+  authentication-service:
+    container_name: authentication-service
+    build: ./authentication-service
+    ports:
+      - 3001:3001
+    
+    

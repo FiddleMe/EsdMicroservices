@@ -1,5 +1,7 @@
 axios
-  .get("http://localhost:8000/api/analytics/pos_neg_percent")
+  .get("http://localhost:5010/analytics/pos_neg_percent", {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
   .then((response) => {
     const data = response.data.data.feedback_percentages;
 
@@ -33,7 +35,10 @@ axios
   });
 
   axios
-  .get("http://localhost:8000/api/analytics/mode_of_eating")
+  .get("http://localhost:5010/analytics/mode_of_eating",
+  {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
   .then((response) => {
     const data = response.data.data;
     var chart = new CanvasJS.Chart("modeOfEatingChart", {
@@ -66,9 +71,14 @@ axios
   });
 
   axios
-  .get("http://localhost:8000/api/analytics/top_words")
+  .get("http://localhost:5010/analytics/top_words", {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  }
+  )
   .then((response) => {
+    
     const data = response.data.data;
+    console.log("result:")
     console.log(data);
 
     var chart = new CanvasJS.Chart("chartContainer3", {
