@@ -118,10 +118,10 @@ const app = Vue.createApp(
             this.addedToCart.push(q);
           }
         }
-        if (document.location.href == "http://localhost:3000/menu.html") {
-          localStorage.removeItem('orders');
-          this.qty = {};
-        }
+        // if (document.location.href == "http://localhost:3000/menu.html") {
+        //   localStorage.removeItem('orders');
+        //   this.qty = {};
+        // }
       }
     },
     // mounted() {

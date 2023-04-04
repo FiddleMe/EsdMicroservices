@@ -179,10 +179,13 @@ def processInvoice(orderId):
     return createInvoice
 
 # create checkout session, return session id
+
+
 def createSession(order):
     totalPrice = int(order['TotalPrice']) * 100
     InvoiceId = order['InvoiceId']
     customerId = InvoiceId.split("_")[1]
+    print(customerId)
     requestBody = {
         "TotalPrice": totalPrice,
         "customerId": customerId
