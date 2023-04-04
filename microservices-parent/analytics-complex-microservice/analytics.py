@@ -15,8 +15,9 @@ else:
 app = Flask(__name__)
 CORS(app)
 
-feedback_url = "http://127.0.0.1:5001/feedback"
-order_url = "http://localhost:8081/api/order"
+feedback_url = "http://feedback-microservice:5001/feedback"
+order_url = "http://order-service:8081/api/order"
+
 
 @app.route("/analytics/pos_neg_percent")
 def return_pos_vs_neg():
@@ -27,7 +28,7 @@ def return_pos_vs_neg():
     if len(feedbacks_list):
         positive_feedbacks = []
         negative_feedbacks = []
-        
+
         sia = SentimentIntensityAnalyzer()
 
         for feedback in feedbacks_list:
@@ -37,28 +38,32 @@ def return_pos_vs_neg():
                 positive_feedbacks.append(description)
             elif compound_score < 0:
                 negative_feedbacks.append(description)
-        positive_percentage = '{:.2%}'.format(len(positive_feedbacks)/len(feedbacks_list))
-        negative_percentage = '{:.2%}'.format(len(negative_feedbacks)/len(feedbacks_list))
-        result = {"positive feedback": positive_percentage, "negative feedback": negative_percentage}
+        positive_percentage = '{:.2%}'.format(
+            len(positive_feedbacks)/len(feedbacks_list))
+        negative_percentage = '{:.2%}'.format(
+            len(negative_feedbacks)/len(feedbacks_list))
+        result = {"positive_feedback": positive_percentage,
+                  "negative_feedback": negative_percentage}
         return jsonify(
-                {
-                    "code": 200,
-                    "data": {
-                        "feedback_percentages": result
-                    }
+            {
+                "code": 200,
+                "data": {
+                    "feedback_percentages": result
                 }
-            )
+            }
+        )
     else:
         return jsonify(
-        {
-            "code": 404,
-            "message": "There is no feedback."
-        }
-    )
+            {
+                "code": 404,
+                "message": "There is no feedback."
+            }
+        )
+
 
 @app.route("/analytics/top_menu_items")
 def top_menu_items():
-    orders_list = invoke_http(order_url, method='GET')
+    orders_list = invoke_http(order_url, method='GET')["orders"]
     # orders_list = [
     #     {
     #         "orderLineItemsList": [
@@ -107,7 +112,8 @@ def top_menu_items():
                 else:
                     order_item_and_qty[order_item] += qty
         number_of_items = 5
-        result = list(dict(sorted(order_item_and_qty.items(), key = lambda x: x[1], reverse = True)[:number_of_items]).keys())
+        result = list(dict(sorted(order_item_and_qty.items(
+        ), key=lambda x: x[1], reverse=True)[:number_of_items]).keys())
         return jsonify(
             {
                 "code": 200,
@@ -121,11 +127,12 @@ def top_menu_items():
                 "message": "There are no orders."
             }
         )
-    
+
+
 @app.route("/analytics/mode_of_eating")
 def preferred_mode_of_eating():
-    orders_list = invoke_http(order_url, method='GET')
-    #next two lines are entirely speculative - order microservice idk how to use
+    orders_list = invoke_http(order_url, method='GET')["orders"]
+    # next two lines are entirely speculative - order microservice idk how to use
     # Note: the data below is entirely test data. This is strictly temporary.
     # orders_list = [
     #     {
@@ -172,8 +179,10 @@ def preferred_mode_of_eating():
             else:
                 modes_of_eating[mode_of_eating] += 1
         for mode_of_eating in modes_of_eating:
-            modes_of_eating[mode_of_eating] = modes_of_eating[mode_of_eating] / len(orders_list)
-            modes_of_eating[mode_of_eating] = '{:.2%}'.format(modes_of_eating[mode_of_eating])
+            modes_of_eating[mode_of_eating] = modes_of_eating[mode_of_eating] / \
+                len(orders_list)
+            modes_of_eating[mode_of_eating] = '{:.2%}'.format(
+                modes_of_eating[mode_of_eating])
         return jsonify(
             {
                 "code": 200,
@@ -215,7 +224,8 @@ def find_top_words():
         negative_word_fd = nltk.FreqDist(negative_bag_of_words)
         most_common_positive = positive_word_fd.most_common(5)
         most_common_negative = negative_word_fd.most_common(5)
-        result = {"most common positive words": most_common_positive, "most common negative words": most_common_negative}
+        result = {"most_common_positive_words": most_common_positive,
+                  "most_common_negative_words": most_common_negative}
         return jsonify(
             {
                 "code": 200,
@@ -223,5 +233,6 @@ def find_top_words():
             }
         )
 
+
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5010, debug=True)
+    app.run(host="0.0.0.0", port=5010, debug=True)

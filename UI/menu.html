@@ -17,7 +17,7 @@
 			<div class="row">
 				<div class="banner justify-content-center mx-auto p-0 mt-5">
 					<div class="hero">
-						<h1> Logo / Name</h1>
+						<h1> My Korea </h1>
 					</div>
 					<div class="sub-content ms-5">
 						<p>Experience the flavors of Korea in every bite!</p>
@@ -32,52 +32,56 @@
 								<span class="visually-hidden">items in cart</span>
 					</a>
 					</button>
-					<button type="button" class="btn btn-primary position-relative ms-5" onclick='document.location.href="http://localhost:3000/logout"'>Logout</button>
+					<button type="button" class="btn btn-warning position-relative ms-5" onclick='document.location.href="refund.html"'>Refund</button>
+					<button type="button" class="btn btn-danger position-relative ms-5" onclick='document.location.href="http://localhost:3001/logout"'>Logout</button>
 				</div>
 			</div>
-			<div class="row mt-4">
+			<!-- <div class="row mt-4">
 				<h1 class="text-center">Recommended Food</h1>
 			</div>
 			<div class="row justify-content-center">
-				<div class="col col-4 justify-content-center p-0" v-for="m in menu">
+				<div class="col col-4 justify-content-center p-0" v-for="r in recoDetails">
 					<div class="food-card justify-content-center mx-auto">
 						<div class="card mx-auto">
-							<img v-bind:src="pics[m.name]" class="mx-auto pt-3 item img" />
-							<div class="item-name">
-								{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
-									${{m.price.toFixed(2)}} </span>
+							<img v-bind:src="pics[r.name]" class="mx-auto pt-3 item img" />
+							<div class="item-name p-3">
+								<img src="https://cdn-icons-png.flaticon.com/512/5976/5976911.png" alt="" style="width: 25px; height: 25px;">
+								{{r.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
+									${{r.price.toFixed(2)}} </span>
+								<img src="https://cdn-icons-png.flaticon.com/512/5976/5976911.png" alt="" style="width: 25px; height: 25px;">
 							</div>
 							<div class="descriptions">
 								<p>
-									{{m.description}}
+									{{r.description}}
 								</p>
-								<button class="btn btn-primary" @click="addToCart(m.name)" onclick="fly()"> Add to
+								<button class="btn btn-primary" @click="addToCart(r.name)" onclick="fly()"> Add to
 									Order </button>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> -->
 
 
 			<div class="row mt-4">
-				<h1 class="text-center">All available food</h1>
+				<h1 class="text-center">Menu Items </h1>
 			</div>
 			<div class="row justify-content-center">
 				<div class="col col-4 justify-content-center p-0" v-for="m in menu">
-					<div class="food-card justify-content-center mx-auto">
+					<div class="food-card justify-content-center mx-auto" :id="'m'+m.name">
 						<div class="card mx-auto">
-							<img v-bind:src="pics[m.name]" class="mx-auto pt-3" />
-							<div class="item-name">
+							<img v-bind:src="pics[m.name]" class="item-img mx-auto pt-3" />
+							<div class="item-name p-3">
+								<img src="https://cdn-icons-png.flaticon.com/512/5976/5976911.png" alt="" v-show="recommended.includes(m.name)" style="width: 25px; height: 25px;">
 								{{m.name}} <span class="badge text-bg-warning float-end me-3 d-inline-block">
 									${{m.price.toFixed(2)}} </span>
+								<img src="https://cdn-icons-png.flaticon.com/512/5976/5976911.png" alt="" v-show="recommended.includes(m.name)" style="width: 25px; height: 25px;">
 							</div>
 							<div class="descriptions">
 								<p>
 									{{m.description}}
-									{{addedToCart}}
 								</p>
-								<button class="btn btn-primary" v-bind:value="m.name" v-model="addedToCart"> Add to
+								<button class="btn btn-primary" @click="addToCart(m.name)"> Add to
 									Order </button>
 							</div>
 						</div>
@@ -86,8 +90,6 @@
 			</div>
 
 		</div>
-	</div>
-
 	</div>
 	<!-- Vue 3 -->
 	<script src='https://cdn.jsdelivr.net/npm/vue@next'></script>

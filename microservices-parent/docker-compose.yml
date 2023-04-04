@@ -15,13 +15,11 @@ services:
     depends_on:
       - mysqldb
     restart: always
-
-
   mysqldb:
     container_name: mysqldb
     image: mysql
     volumes:
-      - ./microservices-parent/mysql_data:/var/lib/mysql
+      - ${PWD}/mysql_data:/var/lib/mysql
     ports:
       - 3307:3306
     environment:
@@ -45,3 +43,54 @@ services:
     depends_on:
       - mysqldb
     restart: always
+  payment-service:
+    container_name: payment-microservice
+    build: ./payment-microservice
+    ports:
+      - 4242:4242
+    restart: always
+  place_order-service:
+    container_name: place_order-service
+    build: ./Complex-Orders-Microservice
+    ports:
+      - 5100:5100
+    depends_on:
+      - order-service
+      - invoice-service
+      - product-service
+  analytics-service:
+    container_name:  analytics-service
+    build: ./analytics-complex-microservice
+    ports:
+      - 5010:5010
+    depends_on:
+      - order-service
+      - feedback-service
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: rabbitmq
+  #   hostname: rabbitmq
+  #   ports:
+  #     - 15672:15672
+  #     - 5672:5672
+  #   networks:
+  #     - notification_network
+  rabbit:
+    container_name: rabbit_pika
+    image: rabbitmq:3-management-alpine
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  notification-service:
+    container_name: notification-microservice
+    build: ./Notification-Microservice/notification-microservice
+    ports:
+      - 4002:4002
+    depends_on:
+      - rabbit
+    command: bash -c "for i in {1..15} ; do if ! curl -s rabbitmq:5672 > /dev/null ; then echo waiting on rabbitmq for $i seconds; sleep 3; fi; done; node index.js"

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.ESDMicroservices.ordermicroservice.dto.OrderRequest;
 
@@ -22,13 +23,14 @@ import com.ESDMicroservices.ordermicroservice.model.Order;
 import com.ESDMicroservices.ordermicroservice.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/order")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     // public ResponseEntity<String> placeOrder(@RequestBody OrderRequest
@@ -58,6 +60,7 @@ public class OrderController {
     // return orderService.searchOrders();
     // }
     @GetMapping
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map<String, Object>> searchOrders() {
         List<Order> orders = orderService.searchOrders();
@@ -85,6 +88,7 @@ public class OrderController {
     // }
     // }
     @GetMapping("/findOrderById")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map<String, Object>> getOrderById(@RequestParam("OrderId") Long orderId) {
         Optional<Order> optionalOrder = orderService.getOrderById(orderId);
@@ -128,6 +132,7 @@ public class OrderController {
     // }
     // }
     @PutMapping("/updateOrderById")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<Map<String, Object>> updateOrderById(@RequestParam("OrderId") Long orderId,
             @RequestParam(value = "InvoiceId", required = false) String invoiceId,
             @RequestParam(value = "Status", required = false) String status) {

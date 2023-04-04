@@ -14,7 +14,7 @@ connectQueue() // call connectQueue function
 async function connectQueue() {
     try {
 
-        connection = await amqp.connect("amqp://localhost:5672");
+        connection = await amqp.connect("amqp://127.0.0.1:5672/");
         channel = await connection.createChannel()
         
         // connect to 'update-status' queue, create one if doesnot exist already

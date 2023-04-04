@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
 import pika
 import os
@@ -8,29 +8,27 @@ import stripe
 
 from invokes import invoke_http
 
-# book_URL = "http://localhost:5000/book"
-order_URL = "http://localhost:8081/api/order"
-get_order_URL = "http://localhost:8081/api/order/findOrderById"
-menu_url = "http://localhost:8080/api/product"
-create_invoice_url = "http://localhost:5000/calculate-bill"
+update_order_url = "http://order-service:8081/api/order/updateOrderById"
+order_URL = "http://order-service:8081/api/order"
+get_order_URL = "http://order-service:8081/api/order/findOrderById"
+menu_url = "http://product-service:8080/api/product"
+create_invoice_url = "http://invoice-service:5000/calculate-bill"
 
-create_checkout_url = "http://127.0.0.1:4242/create-checkout-session"
+create_checkout_url = "http://payment-service:4242/create-checkout-session"
 # pass in session_id at the back
-payment_status_url = "http://127.0.0.1:4242/paymentStatus"
+payment_status_url = "http://payment-service:4242/paymentStatus"
 # pass in payment_intent at the back
-refund_url = "http://127.0.0.1:4242/refund"
+refund_url = "http://payment-service:4242/refund"
 # pass in refundID at the back
-refund_status_url = "http://127.0.0.1:4242/refundStatus"
-update_field_url = "http://127.0.0.1:5000/updateField"
+refund_status_url = "http://payment-service:4242/refundStatus"
+update_field_url = "http://invoice-service:5000/updateField"
 # pass in any unique id to find data from invoices collection
-search_url = "http://127.0.0.1:5000/search"
+search_url = "http://invoice-service:5000/search"
 stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0cTCPZUGCEFPAUXo59zcLa0EMK7CoCSY11LE00JZafQOs4'
 
-# activity_log_URL = "http://localhost:5003/activity_log"
-# error_URL = "http://localhost:5004/error"
 app = Flask(__name__)
 CORS(app)
-hostname = 'localhost'
+hostname = 'rabbit_pika'
 port = 5672
 queue_name = 'update-status'
 
@@ -69,7 +67,8 @@ def place_order():
 def requestInvoice():
     if request.is_json:
         try:
-            orderId = request.get_json()
+            request_data = request.get_json()
+            orderId = request_data["orderId"]
             print(orderId)
             print("received order")
             invoice = processInvoice(orderId)
@@ -77,7 +76,12 @@ def requestInvoice():
             print("-------\n")
             print("result")
             print(invoice)
-            return jsonify(invoice)
+            invoiceId = invoice["body"]["InvoiceId"]
+            paramreq = {"OrderId": orderId, "InvoiceId": invoiceId}
+            updateorder = updateOrderdb(paramreq)
+            print(updateorder)
+            session = createSession(invoice["body"])
+            return session
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -93,6 +97,15 @@ def requestInvoice():
         "code": 400,
         "message": "Invalid JSON input: " + str(request.get_data())
     }), 400
+
+
+def updateOrderdb(invoice):
+    invoiceId = invoice["InvoiceId"]
+    orderId = invoice["OrderId"]
+    updateorder = invoke_http(
+        update_order_url, method="PUT", params={"OrderId": orderId, "InvoiceId": invoiceId}
+    )
+    return updateorder
 
 
 def processPlaceOrder(order):
@@ -122,7 +135,7 @@ def processPlaceOrder(order):
                                       heartbeat=3600, blocked_connection_timeout=3600))
         channel = connection.channel()
         channel.queue_declare(queue='update-status', durable=True)
-        message = {'recipient': 'iamsomoene@gmail.com',
+        message = {'recipient': customerId,
                    'status_msg': 'Order Created'}  # modify as needed
         channel.basic_publish(exchange='',
                               routing_key='update-status', body=json.dumps(message))
@@ -133,15 +146,27 @@ def processPlaceOrder(order):
             "data": {"order": order},
             "message": "Order created."
         }
-    return {
-        "code": 500,
-        "data": {"order_result": order_result},
-        "message": "Order creation failure sent for error handling."
-    }
+    else:
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host=hostname, port=port,
+                                      heartbeat=3600, blocked_connection_timeout=3600))
+        channel = connection.channel()
+        channel.queue_declare(queue='update-status', durable=True)
+        message = {'recipient': customerId,
+                   'status_msg': 'Order Failed, Please Try Again'}  # modify as needed
+        channel.basic_publish(exchange='',
+                              routing_key='update-status', body=json.dumps(message))
+        print("Message published to RabbitMQ")
+
+        return {
+            "code": 500,
+            "data": {"order_result": order_result},
+            "message": "Order creation failure sent for error handling."
+        }
 
 
 def processInvoice(orderId):
-    orderId = orderId["orderId"]
+    # orderId = orderId["orderId"]
     print(orderId)
     order = invoke_http(get_order_URL, method='GET',
                         params={'OrderId': orderId})
@@ -157,19 +182,19 @@ def processInvoice(orderId):
     createInvoice = invoke_http(
         create_invoice_url, method="POST", json=requestBody)
     print("create invoicer result:", createInvoice)
-
     return createInvoice
 
 # create checkout session, return session id
 
 
-@app.route("/checkoutSession", methods=['POST'])
-def createSession():
-    order = request.get_json()
+# @app.route("/checkoutSession", methods=['POST'])
+def createSession(order):
     totalPrice = int(order['TotalPrice']) * 100
     InvoiceId = order['InvoiceId']
+    customerId = InvoiceId.split("_")[1]
     requestBody = {
-        "TotalPrice": totalPrice
+        "TotalPrice": totalPrice,
+        "customerId": customerId
     }
     # create payment session
 
@@ -191,7 +216,7 @@ def createSession():
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "There seem to be an error creating payment session"}
+        return {"status": 500, "error": "There seem to be an error creating payment session." + str(e)}
 
 # after payment, update payment intent. pass in session_id, this is automated
 
@@ -222,48 +247,42 @@ def updatePI():
         update = invoke_http(
             update_field_url, method="PUT", json=requestBody)
         if (update["status"] == 200):
+            connection = pika.BlockingConnection(
+                pika.ConnectionParameters(host=hostname, port=port,
+                                          heartbeat=3600, blocked_connection_timeout=3600))
+            channel = connection.channel()
+            channel.queue_declare(queue='update-status', durable=True)
+            message = {'recipient': request.args.get('customerId'),
+                       'status_msg': f'Payment Successful. To initiate refund, use this PaymentIntentID: ({pi})'}
+            channel.basic_publish(exchange='',
+                                  routing_key='update-status', body=json.dumps(message))
+            print("Message published to RabbitMQ")
+            connection.close()
             # PaymentStatus, pi, sessionID
-            return {"status": 200, "data": pi_obj}
+            # return {"status": 200, "data": pi_obj}
+            return redirect(f'http://localhost:3000/success?RefundId={pi}')
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "There seem to be an error fetching payment intent"}
+        return {"status": 500, "error": "There seem to be an error fetching payment intent." + str(e)}
 
 # send in PaymentIntentId to initiate refund
 
 
-@app.route("/refund", methods=['GET'])
+@app.route("/refund", methods=['POST'])
 def refund():
     requests = request.get_json()
     pi = requests['pi']
+    customerId = requests['customerId']
     piRequestBody = {
         "pi": pi
     }
     # get and update RefundId and RefudnStatus
     try:
+        print("hello")
         refund_obj = invoke_http(
-            refund_url, method="GET", json=piRequestBody)
+            refund_url, method="POST", json=piRequestBody)
         print(refund_obj)
-
-        # recipient = "owg321@gmail.com"
-        # status_msg = "Refund Initiated"
-
-        # message_service = invoke_http(
-        #     f"http://localhost:4001/send-msg?recipient='{recipient}'&status_msg='{status_msg}'", method="GET")
-        # print(message_service + "...")
-
-        # publish message to rabbitmq
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=hostname, port=port,
-                                      heartbeat=3600, blocked_connection_timeout=3600))
-        channel = connection.channel()
-        channel.queue_declare(queue='update-status', durable=True)
-        message = {'recipient': 'owg321@gmail.com',
-                   'status_msg': f'Refund Initiated ({pi})'}
-        channel.basic_publish(exchange='',
-                              routing_key='update-status', body=json.dumps(message))
-        print("Message published to RabbitMQ")
-        connection.close()
 
         requestBody = {
             "PaymentIntentId": pi,
@@ -274,16 +293,27 @@ def refund():
         update = invoke_http(
             update_field_url, method="PUT", json=requestBody)
         if (update["status"] == 200):
+            connection = pika.BlockingConnection(
+                pika.ConnectionParameters(host=hostname, port=port,
+                                          heartbeat=3600, blocked_connection_timeout=3600))
+            channel = connection.channel()
+            channel.queue_declare(queue='update-status', durable=True)
+            message = {'recipient': customerId,
+                       'status_msg': f'Refund Initiated ({pi})'}
+            channel.basic_publish(exchange='',
+                                  routing_key='update-status', body=json.dumps(message))
+            print("Message published to RabbitMQ")
+            connection.close()
             return {"status": 200, "data": refund_obj}
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "Failed to create refund, it is likely that refund has already been initiated for this payment intent"}
+        return {"status": 500, "error": "Failed to create refund, it is likely that refund has already been initiated for this payment intent." + str(e)}
 
 # get refund status and update database, this is for customer to check status
 
 
-@app.route("/refundStatus", methods=['GET'])
+@app.route("/refundStatus", methods=['POST'])
 def refundStatus():
     requests = request.get_json()
     RefundId = requests['RefundId']
@@ -315,7 +345,7 @@ def refundStatus():
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
-        return {"status": 500, "error": "There seem to be an error fetching refund data"}
+        return {"status": 500, "error": "There seem to be an error fetching refund data." + str(e)}
 
 
 if __name__ == "__main__":

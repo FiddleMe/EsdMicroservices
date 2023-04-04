@@ -2,4 +2,9 @@ microservices-parent/product-service/target/classes/application.properties
 ./signup_login/node_modules
 node_modules/
 __pycache__
-.env
+microservices-parent/payment-microservice/env
+microservices-parent/Complex-Orders-Microservice/complex
+microservices-parent/analytics-complex-microservice/env
+microservices-parent/feedback-microservice/env
+microservices-parent/microservices-parent/mysql_data
+microservices-parent/microservices-parent/mysql_data/
