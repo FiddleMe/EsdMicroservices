@@ -54,7 +54,7 @@ def refund():
             channel = connection.channel()
             channel.queue_declare(queue='update-status', durable=True)
             message = {'recipient': customerId,
-                       'status_msg': f'Refund Initiated ({pi})'}
+                       'status_msg': f'Refund Initiated for ({pi}). Refund ID: {refund_obj["refundID"]}'}
             channel.basic_publish(exchange='',
                                   routing_key='update-status', body=json.dumps(message))
             print("Message published to RabbitMQ")
