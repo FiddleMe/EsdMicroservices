@@ -76,7 +76,7 @@ axios
   }
   )
   .then((response) => {
-
+    var data = response.data.data;
     const positive = data.most_common_positive_words;
     const negative = data.most_common_negative_words;
 
