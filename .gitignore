@@ -15,3 +15,5 @@ microservices-parent/invoice-microservice/env
 microservices-parent/Complex-Orders-microservice/env
 
 microservices-parent/Complex-Orders-microservice/complex
+microservices-parent/mysql_data
+microservices-parent/mysql_data/
