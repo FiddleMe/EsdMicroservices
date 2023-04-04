@@ -119,7 +119,7 @@ const app = Vue.createApp(
           }
         }
         if (document.location.href == "http://localhost:3000/menu.html") {
-          localStorage.clear();
+          localStorage.removeItem('orders');
           this.qty = {};
         }
       }
