@@ -77,10 +77,12 @@ const app = Vue.createApp(
     //     }
     // }, // computed
     created() {
-      let params = new URL(document.location).searchParams;
+      if (document.title=='Lorem'){
+        let params = new URL(document.location).searchParams;
       let email = params.get("email");
-      
-      // console.log(localStorage.getItem('email'))
+      localStorage.setItem('email',email)
+      console.log(localStorage.getItem('email'))
+      }
       // console.log(localStorage.getItem("yes"));
       // console.log(localStorage.getItem("no"));
       // console.log(localStorage.getItem('axios/placeorder'))
