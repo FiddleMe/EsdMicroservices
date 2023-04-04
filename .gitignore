@@ -6,3 +6,5 @@ microservices-parent/payment-microservice/env
 microservices-parent/Complex-Orders-Microservice/complex
 microservices-parent/analytics-complex-microservice/env
 microservices-parent/feedback-microservice/env
+microservices-parent/mysql_data
+microservices-parent/mysql_data/
