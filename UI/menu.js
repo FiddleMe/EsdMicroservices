@@ -87,6 +87,7 @@ const app = Vue.createApp(
       // console.log(localStorage.getItem("yes"));
       // console.log(localStorage.getItem("no"));
       // console.log(localStorage.getItem('axios/placeorder'))
+    
       axios
         .get("http://localhost:8080/api/product")
         .then((response) => {
