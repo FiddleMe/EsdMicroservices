@@ -79,7 +79,7 @@ const app = Vue.createApp(
     created() {
       let params = new URL(document.location).searchParams;
       let email = params.get("email");
-      localStorage.setItem('email',email)
+      
       // console.log(localStorage.getItem('email'))
       // console.log(localStorage.getItem("yes"));
       // console.log(localStorage.getItem("no"));
@@ -135,6 +135,7 @@ const app = Vue.createApp(
           order = { product_name: q, quantity: this.qty[q] };
           orderss.push(order);
         }
+        console.log(localStorage)
         var args = {
           orderLineItemsDtoList: orderss,
           customerId: localStorage.getItem('email'),

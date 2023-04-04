@@ -25,12 +25,13 @@ app.get('/', requiresAuth(), (req, res) => {
     {
         res.redirect("http://localhost:3000/admin-dashboard")
     }
-    res.redirect('http://localhost:3000/menu?email='+email);
+    res.redirect('http://localhost:3000/menu');
     });
 
 app.get('/profile', (req, res) => {
     res.send(JSON.stringify(req.oidc.user));
     });
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
