@@ -77,9 +77,12 @@ const app = Vue.createApp(
     //     }
     // }, // computed
     created() {
-      let params = new URL(document.location).searchParams;
+      if (document.title=='Lorem'){
+        let params = new URL(document.location).searchParams;
       let email = params.get("email");
       localStorage.setItem('email',email)
+      }
+      console.log(localStorage.getItem('email'))
       // console.log(localStorage.getItem('email'))
       // console.log(localStorage.getItem("yes"));
       // console.log(localStorage.getItem("no"));
@@ -130,6 +133,7 @@ const app = Vue.createApp(
       handleCheckout() {
         this.continueShopping();
         var orderss = [];
+        console.log(localStorage.getItem('email'))
         for (q in this.qty) {
           console.log(q);
           order = { product_name: q, quantity: this.qty[q] };
