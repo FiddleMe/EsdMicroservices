@@ -1,6 +1,7 @@
 const { auth } = require('express-openid-connect');
 const express = require('express');
 const { requiresAuth } = require('express-openid-connect');
+const cors = require('cors')
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -12,6 +13,7 @@ const config = {
 const manager = "manager@restaurant.com"
 
 const app = express();
+app.use(cors())
 const port = 3001
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));

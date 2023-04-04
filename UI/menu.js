@@ -141,6 +141,7 @@ const app = Vue.createApp(
           Mode: "eatinghere",
         };
 
+        console.log(args)
         axios
           .post("http://localhost:5100/place_order", JSON.stringify(args), {
             headers: { "Content-Type": "application/json" },
