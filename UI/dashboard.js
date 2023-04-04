@@ -34,11 +34,11 @@ axios
     chart.render();
   });
 
-  axios
+axios
   .get("http://localhost:5010/analytics/mode_of_eating",
-  {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  })
+    {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
   .then((response) => {
     const data = response.data.data;
     var chart = new CanvasJS.Chart("modeOfEatingChart", {
@@ -70,16 +70,36 @@ axios
     chart.render();
   });
 
-  axios
+axios
   .get("http://localhost:5010/analytics/top_words", {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   }
   )
   .then((response) => {
-    
+
     const data = response.data.data;
     console.log("result:")
     console.log(data);
+
+    let word_item = {}
+    let words_array = []
+
+
+    const positive = data.most_common_positive_words;
+    const negative = data.most_common_negative_words;
+
+
+    for (let i = 0; i < positive.length; i++) {
+      word_item.y = positive[i][1];
+      word_item.label = positive[i][0];
+      words_array.push(word_item)
+    }
+
+    for (let i = 0; i < negative.length; i++) {
+      word_item.y = negative[i][1];
+      word_item.label = negative[i][0];
+      words_array.push(word_item)
+    }
 
     var chart = new CanvasJS.Chart("chartContainer3", {
       animationEnabled: true,
@@ -90,18 +110,7 @@ axios
         {
           type: "bar",
           showInLegend: true,
-          dataPoints: [
-            {
-              y: parseInt(data.most_common_positive_words),
-              legendText: "Most common positive words",
-              indexLabel: "Most common positive words",
-            },
-            {
-              y: parseInt(data.most_common_negative_words),
-              legendText: "Most common negative words",
-              indexLabel: "Most common negative words",
-            },
-          ],
+          dataPoints: words_array,
         },
       ],
     });

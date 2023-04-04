@@ -6,3 +6,12 @@ microservices-parent/payment-microservice/env
 microservices-parent/Complex-Orders-Microservice/complex
 microservices-parent/analytics-complex-microservice/env
 microservices-parent/feedback-microservice/env
+
+
+microservices-parent/order-microservice/env
+
+microservices-parent/invoice-microservice/env
+
+microservices-parent/Complex-Orders-microservice/env
+
+microservices-parent/Complex-Orders-microservice/complex
