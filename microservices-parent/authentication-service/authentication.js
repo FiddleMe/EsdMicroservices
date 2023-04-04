@@ -25,7 +25,7 @@ app.get('/', requiresAuth(), (req, res) => {
     {
         res.redirect("http://localhost:3000/admin-dashboard")
     }
-    res.redirect('http://localhost:3000/menu');
+    res.redirect('http://localhost:3000/menu?email='+email);
     });
 
 app.get('/profile', (req, res) => {

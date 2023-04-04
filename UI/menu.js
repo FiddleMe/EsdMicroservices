@@ -80,9 +80,10 @@ const app = Vue.createApp(
       if (document.title=='Lorem'){
         let params = new URL(document.location).searchParams;
       let email = params.get("email");
-      localStorage.setItem('email',email)
+      if (email){
+        localStorage.setItem('email',email)
+      }}
       console.log(localStorage.getItem('email'))
-      }
       // console.log(localStorage.getItem("yes"));
       // console.log(localStorage.getItem("no"));
       // console.log(localStorage.getItem('axios/placeorder'))
@@ -216,6 +217,7 @@ const app = Vue.createApp(
         // console.log(localStorage.getItem("orders"))
       },
       updateQty() {
+        this.qty = {}
         this.addedToCart.forEach((c) => {
           if (!this.qty[c]) {
             this.qty[c] = 0;
