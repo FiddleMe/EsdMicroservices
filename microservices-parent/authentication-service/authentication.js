@@ -9,6 +9,7 @@ const config = {
   issuerBaseURL: 'https://dev-1fqam8raxz3k3fsr.us.auth0.com',
   secret: 'd0cdbcde1ec02a79998b7cdb4b9495ba88a483ddeb60ea1f9f469d703f3ae6f8'
 };
+const manager = "manager@restaurant.com"
 
 const app = express();
 const port = 3001
@@ -18,6 +19,10 @@ var email;
 // req.isAuthenticated is provided from the auth router
 app.get('/', requiresAuth(), (req, res) => {
     email = req.oidc.user.email;
+    if (email == manager)
+    {
+        res.redirect("http://localhost:3000/admin-dashboard")
+    }
     res.redirect('http://localhost:3000/menu?email='+email);
     });
 

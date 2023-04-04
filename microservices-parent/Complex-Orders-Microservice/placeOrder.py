@@ -135,7 +135,7 @@ def processPlaceOrder(order):
                                       heartbeat=3600, blocked_connection_timeout=3600))
         channel = connection.channel()
         channel.queue_declare(queue='update-status', durable=True)
-        message = {'recipient': 'iamsomoene@gmail.com',
+        message = {'recipient': customerId,
                    'status_msg': 'Order Created'}  # modify as needed
         channel.basic_publish(exchange='',
                               routing_key='update-status', body=json.dumps(message))
@@ -152,7 +152,7 @@ def processPlaceOrder(order):
                                       heartbeat=3600, blocked_connection_timeout=3600))
         channel = connection.channel()
         channel.queue_declare(queue='update-status', durable=True)
-        message = {'recipient': 'iamsomoene@gmail.com',
+        message = {'recipient': customerId,
                    'status_msg': 'Order Failed, Please Try Again'}  # modify as needed
         channel.basic_publish(exchange='',
                               routing_key='update-status', body=json.dumps(message))
