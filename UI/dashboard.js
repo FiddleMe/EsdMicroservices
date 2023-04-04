@@ -77,44 +77,80 @@ axios
   )
   .then((response) => {
 
-    const data = response.data.data;
-    console.log("result:")
-    console.log(data);
-
-    let word_item = {}
-    let words_array = []
-
-
     const positive = data.most_common_positive_words;
     const negative = data.most_common_negative_words;
 
-
-    for (let i = 0; i < positive.length; i++) {
-      word_item.y = positive[i][1];
-      word_item.label = positive[i][0];
-      words_array.push(word_item)
-    }
-
-    for (let i = 0; i < negative.length; i++) {
-      word_item.y = negative[i][1];
-      word_item.label = negative[i][0];
-      words_array.push(word_item)
-    }
-
-    var chart = new CanvasJS.Chart("chartContainer3", {
+    var chart = new CanvasJS.Chart("commonPositiveWords", {
       animationEnabled: true,
       title: {
         text: "Top Words",
       },
+      axisX: {
+        interval: 1
+      },
       data: [
         {
           type: "bar",
-          showInLegend: true,
-          dataPoints: words_array,
+          color: "#014D65",
+          axisYType: "secondary",
+          dataPoints: [{
+            y: positive[0][1], label: positive[0][0]
+          },
+          {
+            y: positive[1][1], label: positive[1][0]
+          },
+          {
+            y: positive[2][1], label: positive[2][0]
+          },
+          {
+            y: positive[3][1], label: positive[3][0]
+          },
+          {
+            y: positive[4][1], label: positive[4][0]
+          },
+
+          ]
+        },
+      ],
+    });
+
+
+
+    var chart2 = new CanvasJS.Chart("commonNegativeWords", {
+      animationEnabled: true,
+      title: {
+        text: "Top Words",
+      },
+      axisX: {
+        interval: 1
+      },
+      data: [
+        {
+          type: "bar",
+          color: "#014D65",
+          axisYType: "secondary",
+          dataPoints: [{
+            y: negative[0][1], label: negative[0][0]
+          },
+          {
+            y: negative[1][1], label: negative[1][0]
+          },
+          {
+            y: negative[2][1], label: negative[2][0]
+          },
+          {
+            y: negative[3][1], label: negative[3][0]
+          },
+          {
+            y: negative[4][1], label: negative[4][0]
+          },
+
+          ]
         },
       ],
     });
     chart.render();
+    chart2.render();
   });
 
 

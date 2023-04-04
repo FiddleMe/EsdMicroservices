@@ -20,26 +20,24 @@
   <body>
     <div id="app">
       <div>
-        <button id="logout">Logout</button>
+        <button
+          type="button"
+          class="btn btn-danger position-relative ms-5"
+          onclick='document.location.href="http://localhost:3001/logout"'
+        >
+          Logout
+        </button>
       </div>
       <div class="chart-row">
-        <div
-        id="feedbackChart"
-        ></div>
-        <div
-        id="modeOfEatingChart"
-
-        ></div>
+        <div id="feedbackChart"></div>
+        <div id="modeOfEatingChart"></div>
       </div>
-      <div
-        id="chartContainer3"
-        style="width: 45%; height: 300px; display: inline-block"
-      ></div>
-      <div
-        id="chartContainer4"
-        style="width: 45%; height: 300px; display: inline-block"
-      ></div>
+      <div class="chart-row">
+        <div id="commonPositiveWords"></div>
+        <div id="commonNegativeWords"></div>
+      </div>
     </div>
+
     <script
       type="text/javascript"
       src="https://canvasjs.com/assets/script/canvasjs.min.js"
@@ -47,7 +45,5 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@next"></script>
     <script src="https://unpkg.com/axios/dist/axios.js"></script>
     <script src="dashboard.js"></script>
-  
-  </script>
   </body>
 </html>
