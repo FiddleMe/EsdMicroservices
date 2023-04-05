@@ -21,7 +21,7 @@ const app = Vue.createApp(
         }
         axios
           .post(
-            "http://localhost:4100/refund",
+            "http://localhost:8000/complex-refund",
             JSON.stringify({
               pi: this.pi,
               customerId: localStorage.getItem('email'),
@@ -45,7 +45,7 @@ const app = Vue.createApp(
       },
       checkStatus() {
         var dispStatus = document.getElementById('status')
-        axios.post('http://127.0.0.1:4100/refundStatus ', JSON.stringify({RefundId: this.refundId}),{ headers: { "Content-Type": "application/json" } })
+        axios.post('http://localhost:8000/complex-refund-status ', JSON.stringify({RefundId: this.refundId}),{ headers: { "Content-Type": "application/json" } })
             .then(response => {
                 console.log(response.data);
                 this.status = response.data.data.refundStatus

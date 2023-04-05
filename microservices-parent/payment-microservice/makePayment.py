@@ -37,7 +37,8 @@ def create_checkout_session():
         }],
         mode='payment',
         expires_at=startTime + 1800,
-        success_url='http://127.0.0.1:5100/updatePI?SessionId={CHECKOUT_SESSION_ID}' + f"&customerId={customerId}"
+        success_url='http://127.0.0.1:5100/updatePI?SessionId={CHECKOUT_SESSION_ID}' + \
+        f"&customerId={customerId}"
     )
 
     dataDict = {

@@ -1,5 +1,5 @@
 axios
-  .get("http://localhost:5010/analytics/pos_neg_percent", {
+  .get("http://localhost:8000/analytics/pos_neg_percent", {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   })
   .then((response) => {
@@ -35,7 +35,7 @@ axios
   });
 
 axios
-  .get("http://localhost:5010/analytics/mode_of_eating",
+  .get("http://localhost:8000/analytics/mode_of_eating",
     {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
@@ -71,7 +71,7 @@ axios
   });
 
 axios
-  .get("http://localhost:5010/analytics/top_words", {
+  .get("http://localhost:8000/analytics/top_words", {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   }
   )
