@@ -36,3 +36,9 @@
   height: 400px;
   margin: 80px;
 }
+
+.logout-button {
+  display: flex;
+  justify-content: flex-end;
+  margin: 50px 80px;
+}
