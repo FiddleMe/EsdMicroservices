@@ -5,4 +5,4 @@ To Run:
 
 1. cd microservices-parent
 2. docker-compose up
-3. open http://localhost:3001/login
+3. open http://localhost:3001
