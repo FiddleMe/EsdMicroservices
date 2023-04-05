@@ -206,7 +206,7 @@ def createSession(order):
             update_field_url, method="PUT", json=requestBody)
         if (update["status"] == 200):
             # link and SessionId
-            return {"status": 200, "data": paymentSession}
+            return {"status": 201, "data": paymentSession}
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
@@ -253,7 +253,6 @@ def updatePI():
             print("Message published to RabbitMQ")
             connection.close()
             # PaymentStatus, pi, sessionID
-            # return {"status": 200, "data": pi_obj}
             return redirect(f'http://localhost:3000/success?RefundId={pi}')
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}

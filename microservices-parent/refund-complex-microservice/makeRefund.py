@@ -77,7 +77,7 @@ def refund():
                                   routing_key='update-status', body=json.dumps(message))
             print("Message published to RabbitMQ")
             connection.close()
-            return {"status": 200, "data": refund_obj}
+            return {"status": 201, "data": refund_obj}
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
@@ -114,7 +114,7 @@ def refundStatus():
         update = invoke_http(
             update_field_url, method="PUT", json=requestBody)
         if (update["status"] == 200):
-            return {"status": 200, "data": refund_obj}
+            return {"status": 201, "data": refund_obj}
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
     except Exception as e:
