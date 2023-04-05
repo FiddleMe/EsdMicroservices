@@ -19,7 +19,7 @@ services:
     container_name: mysqldb
     image: mysql
     volumes:
-      - ${PWD}/mysql_data:/var/lib/mysql
+      - ./mysql_data:/var/lib/mysql
     ports:
       - 3307:3306
     environment:
