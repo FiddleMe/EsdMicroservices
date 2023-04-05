@@ -8,4 +8,7 @@ https://www.docker.com/products/docker-desktop/
 To Run:
 1. cd ESDMICRSERVICES/microservices-parent
 2. docker-compose up
-3. open http://localhost:3001
+3. on browser, open http://localhost:3001
+
+To Stop:
+1. docker-compose down
