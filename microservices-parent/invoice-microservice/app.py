@@ -123,7 +123,7 @@ def update_field():
             if response.modified_count == 1:
                 return {"status": 200, "message": "Update succcessful"}
             else:
-                return {"status": 200, "message": "There is no change in field so nothing is updated"}
+                return {"status": 201, "message": "There is no change in field so nothing is updated"}
         else:
             return {"status": 400, "error": "Failed to update invoice in database"}
         # if (response.modified_count == 1):
