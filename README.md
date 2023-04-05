@@ -12,3 +12,14 @@ To Run:
 
 To Stop:
 1. docker-compose down
+
+Login:
+1. Customer Account:
+    email: tiffanyhujiahui@gmail.com 
+    password: 123*gmail
+    
+2. Manager Account:
+    email: manager@restaurant.com
+    password: Ki7*^&6fGs
+
+
