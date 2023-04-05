@@ -77,7 +77,7 @@ const app = Vue.createApp(
     //     }
     // }, // computed
     created() {
-      if (document.title=='Lorem'){
+      if (document.title=='Menu'){
         let params = new URL(document.location).searchParams;
       let email = params.get("email");
       if (email){
