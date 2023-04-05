@@ -125,12 +125,14 @@ services:
       - name: top_menu_items-route
         paths:
           - /analytics/top_menu_items
+
   - name: mode_of_eating_analytics-service
     url: http://analytics-service:5010/analytics/mode_of_eating
     routes:
-      - name: top_menu_items-route
+      - name: mode_of_eating-route
         paths:
           - /analytics/mode_of_eating
+          
   - name: top_words_analytics-service
     url: http://analytics-service:5010/analytics/top_words
     routes:
