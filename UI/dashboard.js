@@ -44,7 +44,7 @@ axios
     var chart = new CanvasJS.Chart("modeOfEatingChart", {
       animationEnabled: true,
       title: {
-        text: "% of Top Menu Items",
+        text: "% of Top Mode of Eating",
       },
       data: [
         {
@@ -83,7 +83,7 @@ axios
     var chart = new CanvasJS.Chart("commonPositiveWords", {
       animationEnabled: true,
       title: {
-        text: "Top Words",
+        text: "Top Positive Words",
       },
       axisX: {
         interval: 1
@@ -119,7 +119,7 @@ axios
     var chart2 = new CanvasJS.Chart("commonNegativeWords", {
       animationEnabled: true,
       title: {
-        text: "Top Words",
+        text: "Top Negative Words",
       },
       axisX: {
         interval: 1
