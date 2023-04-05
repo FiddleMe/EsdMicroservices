@@ -109,5 +109,8 @@ services:
     build: ./authentication-service
     ports:
       - 3001:3001
-    
-    
+  server-service:
+    container_name: server-service
+    build: ..
+    ports:
+     - 3000:3000
