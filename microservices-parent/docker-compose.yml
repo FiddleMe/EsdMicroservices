@@ -1,20 +1,157 @@
-version: '3.8'
+# version: '3.8'
+# services:
+#   order-service:
+#     container_name: order-service
+#     build: ./order-microservice
+#     ports:
+#       - 8081:8081
+#     environment:
+#       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/order
+#       SPRING_DATASOURCE_USERNAME: root
+#       SPRING_DATASOURCE_PASSWORD: root
+#       spring.jpa.hibernate.ddl-auto: update
+#     links:
+#       - mysqldb
+#     depends_on:
+#       - mysqldb
+#     restart: always
+#   mysqldb:
+#     container_name: mysqldb
+#     image: mysql
+#     volumes:
+#       - ./mysql_data:/var/lib/mysql
+#     ports:
+#       - 3307:3306
+#     environment:
+#       - MYSQL_DATABASE=order
+#       - MYSQL_DATABASE=feedback
+#       - MYSQL_ROOT_PASSWORD=root
+#   product-service:
+#     container_name: product-service
+#     build: ./product-service
+#     ports:
+#       - 8080:8080
+#   invoice-service:
+#     container_name: invoice-microservice
+#     build: ./invoice-microservice
+#     ports:
+#       - 5000:5000
+#   feedback-service:
+#     container_name: feedback-microservice
+#     build: ./feedback-microservice
+#     ports:
+#       - 5001:5001
+#     depends_on:
+#       - mysqldb
+#     restart: always
+#   payment-service:
+#     container_name: payment-microservice
+#     build: ./payment-microservice
+#     ports:
+#       - 4242:4242
+#     restart: always
+#   place_order-service:
+#     container_name: place_order-service
+#     build: ./Complex-Orders-Microservice
+#     ports:
+#       - 5100:5100
+#     depends_on:
+#       - order-service
+#       - invoice-service
+#       - product-service
+#   make-refund-service:
+#     container_name: make-refund-service
+#     build: ./refund-complex-microservice
+#     ports:
+#       - 4100:4100
+#     depends_on:
+#       - invoice-service
+#       - payment-service
+#   analytics-service:
+#     container_name:  analytics-service
+#     build: ./analytics-complex-microservice
+#     ports:
+#       - 5010:5010
+#     depends_on:
+#       - order-service
+#       - feedback-service
+#   # rabbitmq:
+#   #   image: rabbitmq:3-management
+#   #   container_name: rabbitmq
+#   #   hostname: rabbitmq
+#   #   ports:
+#   #     - 15672:15672
+#   #     - 5672:5672
+#   #   networks:
+#   #     - notification_network
+#   rabbit:
+#     container_name: rabbit_pika
+#     image: rabbitmq:3-management-alpine
+#     hostname: rabbitmq
+#     ports:
+#       - "5672:5672"
+#       - "15672:15672"
+#     environment:
+#       - RABBITMQ_DEFAULT_USER=guest
+#       - RABBITMQ_DEFAULT_PASS=guest
+
+#   notification-service:
+#     container_name: notification-microservice
+#     build: ./Notification-Microservice/notification-microservice
+#     ports:
+#       - 4002:4002
+#     restart: always
+#     depends_on:
+#       - rabbit
+#     command: bash -c "for i in {1..15} ; do if ! curl -s rabbitmq:5672 > /dev/null ; then echo waiting on rabbitmq for $i seconds; sleep 3; fi; done; node index.js"
+#   authentication-service:
+#     container_name: authentication-service
+#     build: ./authentication-service
+#     ports:
+#       - 3001:3001
+    
+    
+version: "3.8"
+
+networks:
+ kong-net:
+
 services:
-  order-service:
-    container_name: order-service
-    build: ./order-microservice
-    ports:
-      - 8081:8081
+  kong:
+    container_name: kong
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - kong-net
+    healthcheck:
+      test: [ “CMD”, “curl”, “-f”, “http://kong:8000” ]
+      interval: 5s
+      timeout: 2s
+      retries: 15
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/order
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      spring.jpa.hibernate.ddl-auto: update
-    links:
-      - mysqldb
-    depends_on:
-      - mysqldb
-    restart: always
+      - KONG_DATABASE=off
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yml
+    ports:
+      - "8000:8000/tcp"
+      - "127.0.0.1:7990:8001/tcp"
+      - "8443:8443/tcp"
+      - "8444:8444/tcp"
+  
+  product-service:
+    container_name: product-service
+    build: ./product-service
+    ports:
+      - 8080:8080
+    networks:
+      - kong-net
+
   mysqldb:
     container_name: mysqldb
     image: mysql
@@ -26,16 +163,35 @@ services:
       - MYSQL_DATABASE=order
       - MYSQL_DATABASE=feedback
       - MYSQL_ROOT_PASSWORD=root
-  product-service:
-    container_name: product-service
-    build: ./product-service
+    networks:
+      - kong-net
+
+  order-service:
+    container_name: order-service
+    build: ./order-microservice
     ports:
-      - 8080:8080
+      - 8081:8081
+    networks:
+      - kong-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/order
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      spring.jpa.hibernate.ddl-auto: update
+    links:
+      - mysqldb
+    depends_on:
+      - mysqldb
+    restart: always
+
   invoice-service:
     container_name: invoice-microservice
     build: ./invoice-microservice
     ports:
       - 5000:5000
+    networks:
+      - kong-net
+
   feedback-service:
     container_name: feedback-microservice
     build: ./feedback-microservice
@@ -44,50 +200,35 @@ services:
     depends_on:
       - mysqldb
     restart: always
+    networks:
+      - kong-net
+
   payment-service:
     container_name: payment-microservice
     build: ./payment-microservice
     ports:
       - 4242:4242
     restart: always
+    networks:
+      - kong-net
   place_order-service:
     container_name: place_order-service
     build: ./Complex-Orders-Microservice
+    networks:
+      - kong-net
     ports:
       - 5100:5100
     depends_on:
       - order-service
       - invoice-service
       - product-service
-  make-refund-service:
-    container_name: make-refund-service
-    build: ./refund-complex-microservice
-    ports:
-      - 4100:4100
-    depends_on:
-      - invoice-service
-      - payment-service
-  analytics-service:
-    container_name:  analytics-service
-    build: ./analytics-complex-microservice
-    ports:
-      - 5010:5010
-    depends_on:
-      - order-service
-      - feedback-service
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   container_name: rabbitmq
-  #   hostname: rabbitmq
-  #   ports:
-  #     - 15672:15672
-  #     - 5672:5672
-  #   networks:
-  #     - notification_network
+
   rabbit:
     container_name: rabbit_pika
     image: rabbitmq:3-management-alpine
     hostname: rabbitmq
+    networks:
+      - kong-net
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -98,16 +239,50 @@ services:
   notification-service:
     container_name: notification-microservice
     build: ./Notification-Microservice/notification-microservice
+    networks:
+      - kong-net
     ports:
       - 4002:4002
     restart: always
     depends_on:
       - rabbit
     command: bash -c "for i in {1..15} ; do if ! curl -s rabbitmq:5672 > /dev/null ; then echo waiting on rabbitmq for $i seconds; sleep 3; fi; done; node index.js"
+
+  make-refund-service:
+    container_name: make-refund-service
+    build: ./refund-complex-microservice
+    networks:
+      - kong-net
+    ports:
+      - 4100:4100
+    depends_on:
+      - invoice-service
+      - payment-service
+
+  analytics-service:
+    container_name:  analytics-service
+    build: ./analytics-complex-microservice
+    networks:
+      - kong-net
+    ports:
+      - 5010:5010
+    depends_on:
+      - order-service
+      - feedback-service
+
   authentication-service:
     container_name: authentication-service
     build: ./authentication-service
+    networks:
+      - kong-net
     ports:
       - 3001:3001
-    
-    
+  server-service:
+    container_name: server-service
+    build: ..
+    networks:
+      - kong-net
+    ports:
+     - 3000:3000
+
+   

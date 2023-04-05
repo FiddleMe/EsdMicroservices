@@ -1,0 +1,142 @@
+_format_version: "2.1"
+_transform: true
+services:
+  - name: order-service
+    url: http://order-service:8081/api/order
+    routes:
+      - name: order-route
+        paths:
+          - /api/order
+  - name: findOrder-service
+    url: http://order-service:8081/api/order/findOrderById
+    routes:
+      - name: find-order-route
+        paths:
+          - /api/order/findOrderById
+  - name: updateorder-service
+    url: http://order-service:8081/api/order/updateOrderById
+    routes:
+      - name: update-order-route
+        paths:
+          - /api/order/updateOrderById
+
+  - name: product-service
+    url: http://product-service:8080/api/product
+    routes:
+      - name: product-route
+        paths:
+          - /api/product
+
+  - name: invoice_calculate_bill-service
+    url: http://invoice-microservice:5000/calculate-bill
+    routes:
+      - name: invoice_calcBill-route
+        paths:
+          - /calculate-bill
+  - name: invoice_updateField-service
+    url: http://invoice-microservice:5000/updateField
+    routes:
+      - name: invoice_updateField-route
+        paths:
+          - /updateField
+  - name: invoice_search-service
+    url: http://invoice-microservice:5000/search
+    routes:
+      - name: invoice_search-route
+        paths:
+          - /search
+
+  - name: feedback-service
+    url: http://feedback-microservice:5001/feedback
+    routes:
+      - name: feedback-route
+        paths:
+          - /feedback
+
+  - name: payment-service
+    url: http://payment-microservice:4242/create-checkout-session
+    routes:
+      - name: checkout-payment-route
+        paths:
+          - /create-checkout-session
+
+  - name: payment-status-service
+    url: http://payment-microservice:4242/paymentStatus
+    routes:
+      - name: payment-status-route
+        paths:
+          - /paymentStatus
+
+  - name: refund-service
+    url: http://payment-microservice:4242/refund
+    routes:
+      - name: refund-route
+        paths:
+          - /refund
+
+  - name: refund-status-service
+    url: http://payment-microservice:4242/refundStatus
+    routes:
+      - name: refund-status-route
+        paths:
+          - /refundStatus
+
+  - name: place-order-service
+    url: http://place_order-service:5100/place_order
+    routes:
+      - name: place-order-route
+        paths:
+          - /place_order
+  - name: request-invoice-order-service
+    url: http://place_order-service:5100/requestInvoice
+    routes:
+      - name: request-invoice-route
+        paths:
+          - /requestInvoice
+  - name: updatePI-service
+    url: http://place_order-service:5100/updatePI
+    routes:
+      - name: updatePI-route
+        paths:
+          - /updatePI
+
+  - name: make-refund-service
+    url: http://make-refund-service:4100/refund
+    routes:
+      - name: make-refund-route
+        paths:
+          - /complex-refund
+  - name: complex-refund-status-service
+    url: http://make-refund-service:4100/refundStatus
+    routes:
+      - name: complex-refund-status-route
+        paths:
+          - /complex-refund-status
+
+  - name: pos_neg_analytics-service
+    url: http://analytics-service:5010/analytics/pos_neg_percent
+    routes:
+      - name: pos_neg-route
+        paths:
+          - /analytics/pos_neg_percent
+  - name: top_menu_items_analytics-service
+    url: http://analytics-service:5010/analytics/top_menu_items
+    routes:
+      - name: top_menu_items-route
+        paths:
+          - /analytics/top_menu_items
+  - name: mode_of_eating_analytics-service
+    url: http://analytics-service:5010/analytics/mode_of_eating
+    routes:
+      - name: top_menu_items-route
+        paths:
+          - /analytics/mode_of_eating
+  - name: top_words_analytics-service
+    url: http://analytics-service:5010/analytics/top_words
+    routes:
+      - name: top_words-route
+        paths:
+          - /analytics/top_words
+
+plugins:
+  - name: cors
