@@ -15,6 +15,9 @@ refund_status_url = "http://payment-service:4242/refundStatus"
 update_field_url = "http://invoice-service:5000/updateField"
 # pass in any unique id to find data from invoices collection
 search_url = "http://invoice-service:5000/search"
+# update database for order
+update_order_url = "http://order-service:8081/api/order/updateOrderById"
+
 stripe.api_key = 'sk_test_51MlMMGLBRjiDAFPiuVE5HAXjMEUJiDlqjGLSP72dEbhQI9STJeHq0cTCPZUGCEFPAUXo59zcLa0EMK7CoCSY11LE00JZafQOs4'
 
 app = Flask(__name__)
@@ -32,7 +35,7 @@ def refund():
     piRequestBody = {
         "pi": pi
     }
-    # get and update RefundId and RefudnStatus
+    # get and update RefundId and RefundStatus
     try:
         print("hello")
         refund_obj = invoke_http(
@@ -44,9 +47,24 @@ def refund():
             "RefundId": refund_obj["refundID"],
             "RefundStatus": refund_obj["refundStatus"]
         }
-        # update Sessionid
+        # update RefundId and RefundStatus
         update = invoke_http(
             update_field_url, method="PUT", json=requestBody)
+        
+
+        # get orderid from invoice database
+        searchRequestBody = {
+            "PaymentIntentId": pi
+        }
+        data_obj = invoke_http(
+            search_url, method="GET", json=searchRequestBody)
+        print(data_obj)
+        OrderId = data_obj["data"]["OrderId"]
+        
+        # update order database with status
+        updateorder = invoke_http(
+            update_order_url, method="PUT", params={"OrderId": OrderId, "Status": "cancelled"}
+        )
         if (update["status"] == 200):
             connection = pika.BlockingConnection(
                 pika.ConnectionParameters(host=hostname, port=port,
